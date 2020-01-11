@@ -1,1 +1,109 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+  .sidebar {
+    grid-area: sidebar;
+  }
+  
+  .sidebar2 {
+    grid-area: sidebar2;
+  }
+  
+  .content {
+    grid-area: content;
+  }
+  
+  .header {
+    grid-area: header;
+  }
+  
+  .footer {
+    grid-area: footer;
+  }
+  
+  .wrapper {
+    background-color: #fff;
+    color: #444;
+    display: grid;
+    grid-gap: 1em;
+    grid-template-areas: "header" "sidebar" "content" "sidebar2" "footer";
+  }
+  
+  @media only screen and (min-width: 500px) {
+    .wrapper {
+      grid-template-columns: 20% auto;
+      grid-template-areas: "header   header" "sidebar  content" "sidebar2 sidebar2" "footer   footer";
+    }
+  }
+  
+  @media only screen and (min-width: 600px) {
+    .wrapper {
+      grid-gap: 20px;
+      grid-template-columns: 120px auto 120px;
+      grid-template-areas: "header  header  header" "sidebar content sidebar2" "footer  footer  footer";
+      max-width: 600px;
+    }
+  }
+  
+  .box {
+    background-color: #444;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 150%;
+  }
+  
+  .header, .footer {
+    background-color: #999;
+  }
+  
+  .sidebar2 {
+    background-color: #ccc;
+    color: #444;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  /* Track */
+  
+  ::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+  
+  /* Handle */
+  
+  ::-webkit-scrollbar-thumb {
+    background: #888888;
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #888888;
+  }
+  
+  .margin-20-bottom {
+    margin-bottom: 20px;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .borderless td, .borderless th {
+    border: none !important;
+  }
+  
+  .borderless thead th {
+    background: #efefef;
+  }
+  
+  .delete-color {
+    color: #673ab7 !important;
+  }

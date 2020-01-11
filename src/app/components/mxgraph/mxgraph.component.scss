@@ -1,0 +1,30 @@
+.mxg-wrap {
+    width: 100%;
+    height: calc(100% - 36px);
+    // overflow: auto;
+    // overflow-x: auto;
+  }
+  .mxg-wrap .flow {
+    stroke-dasharray: 8;
+    animation: dash 0.5s linear;
+    animation-iteration-count: infinite;
+  }
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -16;
+    }
+  }
+  
+  svg {
+    overflow: auto !important;
+  }
+  .am-indeterminate {
+    color: #2db8d2;
+  }
+  .graph-container {
+    position: relative;
+    padding: 10px;
+  }
+  .graph-button-row button {
+    margin-right: 8px;
+  }  

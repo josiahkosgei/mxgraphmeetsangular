@@ -1,0 +1,30 @@
+.item-list {
+    margin: 12px;
+    font-weight: 500;
+    font-size: 16px;
+  }
+  .item-list .group-header {
+    margin: 12px;
+    font-weight: 500;
+    font-size: 12px;
+    color: #2bb7d1
+  }
+  .item-list .drag-item {
+    flex-direction: row;
+    box-sizing: border-box;
+    display: contents;
+    place-content: center space-evenly;
+    align-items: center;
+    touch-action: none;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  :host ::ng-deep  .mat-icon {
+    background-repeat: no-repeat;
+    display: inline-block;
+    fill: currentColor;
+    height: 40px;
+    width: 40px;
+  }
+  

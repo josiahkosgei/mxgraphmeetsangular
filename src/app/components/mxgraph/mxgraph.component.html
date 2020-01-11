@@ -1,0 +1,22 @@
+<div class="mxg-wrap" (mouseup)="dropItem($event)" cdkDropList #cdkDropListConatiner style="overflow:auto">
+    <div fxLayout="row" class="graph-container" fxLayoutAlign="end start">
+      <div>
+          <div class="" role="toolbar" aria-label="Editor Actions">
+              <div class="graph-button-row">
+                  <button mat-raised-button (click)="zoomIn()">
+                      <mat-icon svgIcon="zoomIn"></mat-icon>
+                    </button>
+                  <button mat-raised-button (click)="zoomOut()">
+                      <mat-icon svgIcon="zoomOut"></mat-icon>
+                  </button>
+                  <button mat-raised-button (click)="actual()">
+                      <mat-icon svgIcon="actual"></mat-icon>
+                    </button>
+                  <button mat-raised-button (click)="fit()">
+                      <mat-icon svgIcon="fit"></mat-icon>
+                  </button>
+                </div>
+            </div>
+      </div>
+    </div>
+  </div>
