@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "compodoc": "npx compodoc -p src/tsconfig.app.json"
+    "compodoc": "npx compodoc -p src/tsconfig.app.json",
+    "postinstall": "ng build --aot --prod"
   },
   "private": true,
   "dependencies": {
@@ -23,18 +24,20 @@
     "@angular/platform-browser": "^8.2.14",
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
+    "express": "^4.17.1",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.15",
     "mxgraph": "^3.9.12",
+    "path": "^0.12.7",
     "rxjs": "^6.5.4",
     "tslib": "^1.10.0",
     "uuid": "^3.3.3",
-    "zone.js": "^0.10.2",
-    "@angular/cli": "^8.3.22",
-    "@angular/compiler-cli": "^8.2.14"
+    "zone.js": "^0.10.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.22",
+    "@angular/cli": "^8.3.22",
+    "@angular/compiler-cli": "^8.2.14",
     "@angular/language-service": "^8.2.14",
     "@compodoc/compodoc": "^1.1.11",
     "@types/jasmine": "^3.5.0",
@@ -53,5 +56,9 @@
     "ts-node": "^8.6.1",
     "tslint": "^5.20.1",
     "typescript": "^3.2.2"
+  },
+  "engines": {
+    "node": "~8.15.1",
+    "npm": "~6.4.1"
   }
 }
