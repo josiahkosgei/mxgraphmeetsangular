@@ -4,12 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --aot --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "compodoc": "npx compodoc -p src/tsconfig.app.json",
-    "postinstall": "ng build --aot --prod"
+    "compodoc": "npx compodoc -p src/tsconfig.app.json"
   },
   "private": true,
   "dependencies": {
@@ -24,7 +23,6 @@
     "@angular/platform-browser": "^8.2.14",
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
-    "express": "^4.17.1",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.15",
     "mxgraph": "^3.9.12",
@@ -56,9 +54,5 @@
     "ts-node": "^8.6.1",
     "tslint": "^5.20.1",
     "typescript": "^3.2.2"
-  },
-  "engines": {
-    "node": "~8.15.1",
-    "npm": "~6.4.1"
   }
 }
