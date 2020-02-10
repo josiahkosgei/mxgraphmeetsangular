@@ -4,12 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --aot --prod",
+    "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "compodoc": "npx compodoc -p src/tsconfig.app.json",
-    "preinstall": "npm i -g http-server && npm i -g @angular/cli"
+    "preinstall": "npm i -g http-server && npm i -g @angular/cli @angular-devkit/build-angular @angular/compiler-cli"
   },
   "private": true,
   "dependencies": {
