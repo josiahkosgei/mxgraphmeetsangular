@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "compodoc": "npx compodoc -p src/tsconfig.app.json",
-    "preinstall": "npm i -g http-server && npm i -g @angular/cli @angular-devkit/build-angular @angular/compiler-cli"
+    "preinstall": "npm i -g http-server && npm i -g @angular/cli && npm i -g @angular-devkit/build-angular && npm i -g @angular/compiler-cli"
   },
   "private": true,
   "dependencies": {
