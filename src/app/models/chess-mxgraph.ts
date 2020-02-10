@@ -1,16 +1,15 @@
 import { GraphItemTypes } from './graph-item-types.enum';
 import { getItemByType } from './graph-item';
-import MxGraphFactory from '../../@types/mxgraph';
-// import mxgraph from '../../@types/mxgraph';
+import { mxgraph } from 'mxgraph';
 
-const _mxgraph = MxGraphFactory({
-    mxBasePath: '../assets/mxgraph',
-    mxImageBasePath: `../assets/mxgraph/images`,
-    mxLoadResources: true,
-    mxLoadStylesheets: true,
+const mg: typeof mxgraph  = require('mxgraph')({
+    // mxBasePath: '/assets/mxgraph',
+    // mxImageBasePath: `/assets/mxgraph/images`,
+    // mxLoadResources: true,
+    // mxLoadStylesheets: true,
 });
 const { mxGraph, mxEvent, mxCell, mxGeometry, mxEditor, mxImage, mxStackLayout, mxLayoutManager,
-    mxGraphModel, mxSwimlaneManager, mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager } = _mxgraph;
+    mxGraphModel, mxSwimlaneManager, mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager } = mg;
 interface GraphItemVertexData {
     id?: string;
     value: string;

@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 4201 --poll=500  --prod",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "compodoc": "npx compodoc -p src/tsconfig.app.json"
   },
   "private": true,
   "dependencies": {
@@ -24,7 +25,7 @@
     "@angular/router": "^8.2.14",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.15",
-    "mxgraph": "^4.0.6",
+    "mxgraph": "^3.9.12",
     "rxjs": "^6.5.4",
     "tslib": "^1.10.0",
     "uuid": "^3.3.3",
@@ -35,8 +36,10 @@
     "@angular/cli": "^8.3.22",
     "@angular/compiler-cli": "^8.2.14",
     "@angular/language-service": "^8.2.14",
+    "@compodoc/compodoc": "^1.1.11",
     "@types/jasmine": "^3.5.0",
     "@types/jasminewd2": "^2.0.8",
+    "@types/mxgraph": "github:lgleim/mxgraph-typings",
     "@types/node": "^13.1.6",
     "codelyzer": "^5.2.1",
     "jasmine-core": "^3.5.0",
@@ -49,6 +52,6 @@
     "protractor": "^5.4.2",
     "ts-node": "^8.6.1",
     "tslint": "^5.20.1",
-    "typescript": "^3.5.3"
+    "typescript": "^3.2.2"
   }
 }
