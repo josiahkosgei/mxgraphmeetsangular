@@ -176,59 +176,6 @@ export class ChessMxgraph extends mxGraph {
     this.minFitScale = null;
   }
 
-  createEdge(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
-    this.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
-  }
-
-  insertModel() {
-  }
-  toJSON(): ChessGraphData {
-    const grouping = [];
-    const cells = Object.values<GraphItemVertex | GraphItemEdge>(this.model.cells);
-    for (let i = 0; i < cells.length; i++) {
-      const tmp = this.model.getParent(cells[i]);
-      if (cells[i].vertex) {
-        grouping.push(cells[i]);
-      }
-    }
-    return {
-      grouping,
-      graph: cells.filter((item) => item instanceof GraphItemVertex).map((item: GraphItemVertex) => item.toJSON()),
-    };
-  }
-  getJsonModel() {
-    const encoder = new JsonCodec();
-    const jsonNodes = encoder.decode(this.getModel());
-    return {
-      graph: jsonNodes
-    };
-  }
-  animateJsonModel(vertices: number[]) {
-    const encoder = new JsonCodec();
-    const jsonNodes = encoder.animate(this.getModel());
-    const filtereded = jsonNodes.filter((item) => {
-      return vertices.includes(Number(item.id));
-    });
-    return {
-      graph: filtereded
-    };
-  }
-  generateJsonModel() {
-    const jsonNodes = this.getJsonModel();
-    return jsonNodes; // this.stringifyWithoutCircular(jsonNodes);
-  }
-  addListenerCHANGE(func: Function) {
-    this.getModel().addListener(mxEvent.CHANGE, func);
-  }
-  addListenerCELL_CONNECTED(func: Function) {
-    this.getModel().addListener(mxEvent.CELL_CONNECTED, func);
-  }
-  ramoveListenerCHANGE() {
-    mxEvent.removeAllListeners(mxEvent.CHANGE);
-  }
-  selectedModel(func: Function) {
-    this.getSelectionModel().addListener(mxEvent.CHANGE, func);
-  }
   styling() {
     // Changes the default vertex style in-place
     let style = this.getStylesheet().getDefaultVertexStyle();
