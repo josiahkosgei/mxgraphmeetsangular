@@ -162,20 +162,27 @@ export class ChessMxgraph extends mxGraph {
     super(node);
     mxEvent.disableContextMenu(node);
     this.setConnectable(true);
-    //  this.allowAutoPanning = true;
     this.timerAutoScroll = true;
-    // this.snapToTerminals = true;
-    // this.graphHandler.guidesEnabled = true;
     this.setPanning(true);
     this.centerZoom = true;
     this.setDropEnabled(true);
-    //  this.alternateEdgeStyle = 'elbow=vertical';
     this.swimlaneNesting = false;
     this.connectionHandler.connectImage = new mxImage('../assets/icons/gif/connector.gif', 16, 16);
     this.styling();
     this.minFitScale = null;
   }
-
+  addListenerCHANGE (func: Function) {
+     this.getModel().addListener(mxEvent.CHANGE, func);
+   }
+   addListenerCELL_CONNECTED (func: Function) {
+     this.getModel().addListener(mxEvent.CELL_CONNECTED, func);
+  }
+   ramoveListenerCHANGE () {
+     mxEvent.removeAllListeners(mxEvent.CHANGE);
+   }
+   selectedModel(func: Function) {
+    this.getSelectionModel().addListener(mxEvent.CHANGE, func);
+   }
   styling() {
     // Changes the default vertex style in-place
     let style = this.getStylesheet().getDefaultVertexStyle();
