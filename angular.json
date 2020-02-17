@@ -30,7 +30,8 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/assets/mxgraph/css/common.css"
             ],
             "scripts": [
               "node_modules/mxgraph/javascript/mxClient.js"

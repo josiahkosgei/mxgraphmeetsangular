@@ -1,15 +1,23 @@
 import { GraphItemTypes } from './graph-item-types.enum';
 import { getItemByType } from './graph-item';
 import { mxgraph } from 'mxgraph';
-
-const mg: typeof mxgraph  = require('mxgraph')({
-    // mxBasePath: '/assets/mxgraph',
-    // mxImageBasePath: `/assets/mxgraph/images`,
-    // mxLoadResources: true,
-    // mxLoadStylesheets: true,
-});
+import MxGraphFactory from 'mxgraph';
+// const { mxGraph, mxEvent, mxCell, mxGeometry } = MxGraphFactory({
+//   mxBasePath: 'assets/mxgraph'
+// });
+// const mg  = MxGraphFactory({
+//     mxBasePath: '/assets/mxgraph',
+//     mxImageBasePath: '/assets/mxgraph/images',
+//     mxLoadResources: true,
+//     mxLoadStylesheets: true,
+// });
 const { mxGraph, mxEvent, mxCell, mxGeometry, mxEditor, mxImage, mxStackLayout, mxLayoutManager,
-    mxGraphModel, mxSwimlaneManager, mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager } = mg;
+    mxGraphModel, mxSwimlaneManager, mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager } = MxGraphFactory({
+      mxBasePath: 'assets/mxgraph',
+      mxImageBasePath: '/assets/mxgraph/images',
+      mxLoadResources: true,
+      mxLoadStylesheets: true,
+    });
 interface GraphItemVertexData {
     id?: string;
     value: string;
