@@ -176,7 +176,7 @@ export class ChessMxgraph extends mxGraph {
     this.minFitScale = null;
   }
 
-  insertEdge(parent: ChessMxCell, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
+  insertEdge(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
     this.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
   }
 
