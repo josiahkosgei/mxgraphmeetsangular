@@ -11,17 +11,17 @@
     "compodoc": "npx compodoc -p src/tsconfig.app.json",
     "preinstall": "npm i -g http-server && npm i -g @angular/cli",
     "postinstall": "ng build",
-    "start": " nodemon server.js"
+    "start": "node server.js"
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/build-angular": "^0.803.22",
     "@angular/animations": "^8.2.14",
     "@angular/cdk": "^8.2.3",
     "@angular/cli": "^8.3.22",
-    "@angular-devkit/build-angular": "^0.803.22",
-    "@angular/compiler-cli": "^8.2.14",
     "@angular/common": "^8.2.14",
     "@angular/compiler": "^8.2.14",
+    "@angular/compiler-cli": "^8.2.14",
     "@angular/core": "^8.2.14",
     "@angular/flex-layout": "^8.0.0-beta.27",
     "@angular/forms": "^8.2.14",
