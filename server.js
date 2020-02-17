@@ -1,9 +1,12 @@
-const path = require('path');
 const express = require('express');
-const app = express();
+const path = require('path');
 
-app.use(express.static(__dirname + '/dist'));
+const ngApp = express();
 
-// Start the app by listening on the default Heroku port
+ngApp.use(express.static('./dist/mxgraphmeetsangular'));
 
-app.listen(process.env.PORT || 8080);
+ngApp.get('/*', function (request, response) {
+  response.sendFile(path.join(__dirname, '/dist/mxgraphmeetsangular/index.html'));
+});
+
+ngApp.listen(process.env.PORT || 8080);
