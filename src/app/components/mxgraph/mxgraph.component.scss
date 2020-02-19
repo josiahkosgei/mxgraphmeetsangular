@@ -1,8 +1,5 @@
 .mxg-wrap {
-    width: 100%;
-    height: calc(100% - 36px);
-    // overflow: auto;
-    // overflow-x: auto;
+  position:absolute;overflow:hidden;top:40px;left:40px;width:97%;height:97%;border: gray dotted 1px;cursor:default;
   }
   .mxg-wrap .flow {
     stroke-dasharray: 8;
@@ -14,7 +11,7 @@
       stroke-dashoffset: -16;
     }
   }
-  
+
   svg {
     overflow: auto !important;
   }
@@ -27,4 +24,4 @@
   }
   .graph-button-row button {
     margin-right: 8px;
-  }  
+  }

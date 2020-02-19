@@ -1,20 +1,15 @@
 import { getItemByType } from './graph-item';
 import { GraphItemTypes } from './graph-item-types.enum';
-import { mxgraph } from 'mxgraph';
+import MxGraphFactory, { mxgraph } from 'mxgraph';
 
-const options = {
-  mxBasePath: `/assets/mxgraph`,
-  mxImageBasePath: `/assets/mxgraph/images`,
-  mxLoadResources: true,
-  mxLoadStylesheets: true,
-};
+const localMxgraph = require('mxgraph')();
 
-const mx: mxgraph  = require('mxgraph')(options);
+const { mxGraph, mxEvent, mxCell, mxGeometry, mxEditor, mxImage,
+  mxStackLayout, mxLayoutManager, mxGraphModel, mxSwimlaneManager,
+  mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager,
+  mxEdgeStyle, mxPoint } = localMxgraph;
 
-const { mxGraph, mxEvent, mxCell, mxGeometry, mxEditor, mxImage, mxStackLayout, mxLayoutManager,
-  mxGraphModel, mxSwimlaneManager, mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager } = mx;
-
-class JsonCodec extends mxObjectCodec {s
+class JsonCodec extends mxObjectCodec {
   constructor() {
     super(null, null, null, null);
   }
@@ -62,6 +57,8 @@ export class GraphItemEdge extends mxCell {
   private _target: GraphItemVertex;
   private _source: GraphItemVertex;
   private _name = '';
+  parent: any;
+  style: string;
 
   constructor({ parent, id, value, source, target, style }:
     { parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style: string }) {
@@ -75,8 +72,8 @@ export class GraphItemEdge extends mxCell {
     this.value = value;
     this.cellSource = source;
     this.cellTarget = target;
-    // this.parent = parent;
-    // this.style = style != null ? style : 'defaultEdge;verticalAlign=top;verticalLabelPosition=bottom;edgeStyle=orthogonalEdgeStyle;rounded=1;fontColor=black';
+    this.parent = parent;
+    this.style = style != null ? style : 'defaultEdge;verticalAlign=top;verticalLabelPosition=bottom;edgeStyle=orthogonalEdgeStyle;rounded=1;fontColor=black';
   }
 
   get value(): string {
@@ -105,7 +102,8 @@ export class GraphItemEdge extends mxCell {
   }
 }
 export abstract class GraphItemVertex extends mxCell {
-    constructor({ id, value, x = 0, y = 0, style, graphItemType: graphItemType }:
+  connectable: boolean;
+  constructor({ id, value, x = 0, y = 0, style, graphItemType: graphItemType }:
     { id?: string, value: string, x: number, y: number, style: string, graphItemType: GraphItemTypes }) {
     super(null, new mxGeometry(0, 0, 100, 100), '');
     this.setVertex(true);
@@ -116,7 +114,7 @@ export abstract class GraphItemVertex extends mxCell {
     this.y = y;
     // this.graphItemType = graphItemType;
     this.value = value;
-    // this.connectable = true;
+    this.connectable = true;
     this.setStyle(style);
   }
 
@@ -136,11 +134,11 @@ export abstract class GraphItemVertex extends mxCell {
 
 
   abstract get type(): GraphItemTypes;
-  private x: number;
-  private y: number;
-  private readonly width: number = 60;
-  private readonly height: number = 60;
-  private name: string;
+  x: number;
+  y: number;
+  readonly width: number = 60;
+  readonly height: number = 60;
+  name: string;
   static getItem({ id, value, x = 0, y = 0, style, graphItemType }: GraphItemVertexData): GraphItemVertex {
     // tslint:disable-next-line: no-use-before-declare
     const genericItem = new GenericGraphItem<any>({ id, value, x, y, style, graphItemType });
@@ -160,56 +158,96 @@ class GenericGraphItem<T> extends GraphItemVertex {
     this.graphItemType = itemType;
   }
 }
-export class ChessMxgraph extends mxGraph {
+export class FieldMxgraph extends mxGraph {
+  border: number;
+  timerAutoScroll: boolean;
+  centerZoom: boolean;
+  swimlaneNesting: boolean;
   constructor(node: HTMLElement) {
     super(node);
     mxEvent.disableContextMenu(node);
-    this.setConnectable(true);
-    // this.timerAutoScroll = true;
+
+    // this.setConnectable(true);
+    this.timerAutoScroll = true;
     this.setPanning(true);
-    // this.centerZoom = true;
+    this.centerZoom = true;
     this.setDropEnabled(true);
     // this.swimlaneNesting = false;
     this.connectionHandler.connectImage = new mxImage('../assets/icons/gif/connector.gif', 16, 16);
     this.styling();
     // this.minFitScale = null;
   }
-  addListenerCHANGE(func: Function) {
-     this.getModel().addListener(mxEvent.CHANGE, func);
-   }
-   addListenerCELL_CONNECTED(func: Function) {
-     this.getModel().addListener(mxEvent.CELL_CONNECTED, func);
+  insertEdge(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
+    this.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
   }
-   ramoveListenerCHANGE() {
-     mxEvent.removeAllListeners(mxEvent.CHANGE);
-   }
-   selectedModel(func: Function) {
+  createEdge(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
+    this.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
+  }
+  addListenerCHANGE(func: Function) {
+    this.getModel().addListener(mxEvent.CHANGE, func);
+  }
+  addListenerCELL_CONNECTED(func: Function) {
+    this.getModel().addListener(mxEvent.CELL_CONNECTED, func);
+  }
+  removeListenerCHANGE() {
+    mxEvent.removeAllListeners(mxEvent.CHANGE);
+  }
+  selectedModel(func: Function) {
     this.getSelectionModel().addListener(mxEvent.CHANGE, func);
-   }
+  }
   toJSON(): ChessGraphData {
     const grouping = [];
     const cells = Object.values<GraphItemVertex | GraphItemEdge>(this.model.cells);
-    for (let i = 0; i < cells.length; i++) {
-          const tmp = this.model.getParent(cells[i]);
-          if (cells[i].vertex && (this.isPool(tmp) || this.isPool(cells[i]))) {
-            grouping.push(cells[i]);
-          }
-        }
+    for (const [i, v] of cells.entries()) {
+      const tmp = this.model.getParent(cells[i]);
+      if (cells[i].vertex && (this.isPool(tmp) || this.isPool(cells[i]))) {
+        grouping.push(cells[i]);
+      }
+    }
     return {
-       grouping,
-       graph: cells.filter((item) => item instanceof GraphItemVertex).map((item: GraphItemVertex) => item.toJSON()),
-     };
-   }
+      grouping,
+      graph: cells.filter((item) => item instanceof GraphItemVertex).map((item: GraphItemVertex) => item.toJSON()),
+    };
+  }
   styling() {
+    this.getView().translate = new mxPoint(this.border / 2, this.border / 2);
+    // this.setResizeContainer(true);
+    // this.graphHandler.setRemoveCellsFromParent(false);
     // Changes the default vertex style in-place
     let style = this.getStylesheet().getDefaultVertexStyle();
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+    style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+    style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'white';
     style[mxConstants.STYLE_FONTSIZE] = 11;
     style[mxConstants.STYLE_STARTSIZE] = 22;
-    style[mxConstants.STYLE_FOLDABLE] = false;
+    style[mxConstants.STYLE_HORIZONTAL] = true;
     style[mxConstants.STYLE_FONTCOLOR] = 'black';
     style[mxConstants.STYLE_STROKECOLOR] = 'black';
     delete style[mxConstants.STYLE_FILLCOLOR];
+
+    style = mxUtils.clone(style);
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+    style[mxConstants.STYLE_FONTSIZE] = 10;
+    style[mxConstants.STYLE_ROUNDED] = true;
+    style[mxConstants.STYLE_HORIZONTAL] = true;
+    style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+    delete style[mxConstants.STYLE_STARTSIZE];
+    style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'none';
+    this.getStylesheet().putCellStyle('process', style);
+
+    style = mxUtils.clone(style);
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
+    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
+    delete style[mxConstants.STYLE_ROUNDED];
+    this.getStylesheet().putCellStyle('state', style);
+
+    style = mxUtils.clone(style);
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RHOMBUS;
+    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RhombusPerimeter;
+    style[mxConstants.STYLE_VERTICAL_ALIGN] = 'top';
+    style[mxConstants.STYLE_SPACING_TOP] = 40;
+    style[mxConstants.STYLE_SPACING_RIGHT] = 64;
+    this.getStylesheet().putCellStyle('condition', style);
 
     style = mxUtils.clone(style);
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_DOUBLE_ELLIPSE;
@@ -220,6 +258,13 @@ export class ChessMxgraph extends mxGraph {
     delete style[mxConstants.STYLE_SPACING_RIGHT];
     this.getStylesheet().putCellStyle('end', style);
 
+    style = this.getStylesheet().getDefaultEdgeStyle();
+    style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+    style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_BLOCK;
+    style[mxConstants.STYLE_ROUNDED] = true;
+    style[mxConstants.STYLE_FONTCOLOR] = 'black';
+    style[mxConstants.STYLE_STROKECOLOR] = 'black';
+
     style = mxUtils.clone(style);
     style[mxConstants.STYLE_DASHED] = true;
     style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_OPEN;
@@ -227,3 +272,137 @@ export class ChessMxgraph extends mxGraph {
     this.getStylesheet().putCellStyle('crossover', style);
   }
 }
+export class FieldMxEditor extends mxEditor {
+  defaultGroup: string;
+  defaultEdge: string;
+  layoutDiagram: boolean;
+  maintainSwimlanes: boolean;
+  swimlaneRequired: boolean;
+  forcedInserting: boolean;
+  graph: FieldMxgraph;
+  constructor(node: HTMLElement) {
+    const config = mxUtils.load(
+      '../assets/mxgraph/config/keyhandler-commons.xml').
+      getDocumentElement();
+    super(config);
+    this.maintainSwimlanes = true;
+    this.swimlaneRequired = true;
+    this.forcedInserting = true;
+    this.graph = new FieldMxgraph(node);
+    this.onInit();
+
+  }
+  onInit() {
+
+    this.graph.createPanningManager = () => {
+      const pm = new mxPanningManager(this);
+      pm.border = 30;
+
+      return pm;
+    };
+    const model = this.graph.getModel();
+    // Auto-resizes the container
+    this.graph.border = 80;
+    this.graph.getView().translate = new mxPoint(this.graph.border/2, this.graph.border/2);
+    this.graph.setResizeContainer(true);
+    this.graph.graphHandler.setRemoveCellsFromParent(false);
+    // Adds automatic layout and various switches if the
+    // graph is enabled
+    if (this.graph.isEnabled()) {
+
+      this.graph.isValidTarget = function (cell) {
+        const style = this.getModel().getStyle(cell);
+
+        return !this.getModel().isEdge(cell) && !this.isSwimlane(cell) &&
+          (style == null || !(style === 'state' || style.indexOf('state') === 0));
+      };
+      // Returns true for valid drop operations
+      this.graph.isValidDropTarget = (target, cells, evt) => {
+        if (this.graph.isSplitEnabled() && this.graph.isSplitTarget(target, cells, evt)) {
+          return true;
+        }
+
+        let lane = false;
+        let pool = false;
+        let cell = false;
+
+        // Checks if any lanes or pools are selected
+        for (const [i, v] of cells.entries()) {
+          const tmp = this.graph.getModel().getParent(cells[i]);
+          lane = lane || this.graph.isPool(tmp);
+          pool = pool || this.graph.isPool(cells[i]);
+          cell = cell || !(lane || pool);
+        }
+        return !pool && cell !== lane && ((lane && this.graph.isPool(target)) ||
+          (cell && this.graph.isPool(this.graph.getModel().getParent(target))));
+      };
+
+      // Adds new method for identifying a pool
+      this.graph.isPool = (cell) => {
+        const parent = this.graph.getModel().getParent(cell);
+        return parent != null && this.graph.getModel().getParent(parent) === this.graph.getModel().getRoot();
+      };
+
+      // Changes swimlane orientation while collapsed
+      const graph = this.graph;
+      this.graph.model.getStyle = function (cell) {
+        let style = mxGraphModel.prototype.getStyle.apply(this, arguments);
+        if (graph.isCellCollapsed(cell)) {
+          if (style != null) {
+            style += ';';
+          } else {
+            style = '';
+          }
+
+          style += 'horizontal=1;align=left;spacingLeft=14;';
+        }
+        return style;
+      };
+      // Keeps widths on collapse/expand
+      const foldingHandler = (sender, evt) => {
+        const cells = evt.getProperty('cells');
+        for (const [i, v] of cells.entries()) {
+          const geo = this.graph.model.getGeometry(cells[i]);
+
+          if (geo.alternateBounds != null) {
+            geo.width = geo.alternateBounds.width;
+          }
+        }
+      };
+      this.graph.addListener(mxEvent.FOLD_CELLS, foldingHandler);
+    }
+
+    // Applies size changes to siblings and parents
+    new mxSwimlaneManager(this.graph);
+
+    // Creates a stack depending on the orientation of the swimlane
+    const layout = new mxStackLayout(this.graph, false);
+
+    // Makes sure all children fit into the parent swimlane
+    layout.resizeParent = true;
+
+    // Applies the size to children if parent size changes
+    layout.fill = true;
+
+    // Only update the size of swimlanes
+    layout.isVertexIgnored = (vertex) => {
+      return !this.graph.isSwimlane(vertex);
+    };
+
+    // Keeps the lanes and pools stacked
+    const layoutMgr = new mxLayoutManager(this.graph);
+
+    layoutMgr.getLayout = (cell) => {
+      if (!this.graph.model.isEdge(cell) && this.graph.getModel().getChildCount(cell) > 0 &&
+        (model.getParent(cell) === model.getRoot() || this.graph.isPool(cell))) {
+        layout.fill = this.graph.isPool(cell);
+
+        return layout;
+      }
+
+      return null;
+    };
+
+  }
+}
+
