@@ -182,8 +182,8 @@ export class FieldMxgraph extends mxGraph {
     // this.styling();
     // this.minFitScale = null;
   }
-  insertEdgess(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
-    this.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
+  insertEdge(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
+    return this.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
   }
   createEdge(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
     this.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
