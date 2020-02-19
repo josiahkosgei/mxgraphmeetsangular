@@ -1,13 +1,20 @@
-import { GraphItemTypes } from './graph-item-types.enum';
 import { getItemByType } from './graph-item';
+import { GraphItemTypes } from './graph-item-types.enum';
 import { mxgraph } from 'mxgraph';
-import MxGraphFactory from 'mxgraph';
 
-const _mxgraph: typeof mxgraph = MxGraphFactory({});
+const options = {
+  mxBasePath: `/assets/mxgraph`,
+  mxImageBasePath: `/assets/mxgraph/images`,
+  mxLoadResources: true,
+  mxLoadStylesheets: true,
+};
+
+const mx: mxgraph  = require('mxgraph')(options);
+
 const { mxGraph, mxEvent, mxCell, mxGeometry, mxEditor, mxImage, mxStackLayout, mxLayoutManager,
-  mxGraphModel, mxSwimlaneManager, mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager } = _mxgraph;
+  mxGraphModel, mxSwimlaneManager, mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager } = mx;
 
-class JsonCodec extends mxObjectCodec {
+class JsonCodec extends mxObjectCodec {s
   constructor() {
     super(null, null, null, null);
   }
@@ -51,9 +58,6 @@ interface GraphItemVertexData {
   style: string;
   graphItemType: GraphItemTypes;
 }
-export class ChessMxCell extends mxCell {
-
-}
 export class GraphItemEdge extends mxCell {
   private _target: GraphItemVertex;
   private _source: GraphItemVertex;
@@ -71,9 +75,8 @@ export class GraphItemEdge extends mxCell {
     this.value = value;
     this.cellSource = source;
     this.cellTarget = target;
-    this.parent = parent;
-    this.style = style != null ? style
-      : 'defaultEdge;verticalAlign=top;verticalLabelPosition=bottom;edgeStyle=orthogonalEdgeStyle;rounded=1;fontColor=black';
+    // this.parent = parent;
+    // this.style = style != null ? style : 'defaultEdge;verticalAlign=top;verticalLabelPosition=bottom;edgeStyle=orthogonalEdgeStyle;rounded=1;fontColor=black';
   }
 
   get value(): string {
@@ -113,7 +116,7 @@ export abstract class GraphItemVertex extends mxCell {
     this.y = y;
     // this.graphItemType = graphItemType;
     this.value = value;
-    this.connectable = true;
+    // this.connectable = true;
     this.setStyle(style);
   }
 
@@ -162,26 +165,40 @@ export class ChessMxgraph extends mxGraph {
     super(node);
     mxEvent.disableContextMenu(node);
     this.setConnectable(true);
-    this.timerAutoScroll = true;
+    // this.timerAutoScroll = true;
     this.setPanning(true);
-    this.centerZoom = true;
+    // this.centerZoom = true;
     this.setDropEnabled(true);
-    this.swimlaneNesting = false;
+    // this.swimlaneNesting = false;
     this.connectionHandler.connectImage = new mxImage('../assets/icons/gif/connector.gif', 16, 16);
     this.styling();
-    this.minFitScale = null;
+    // this.minFitScale = null;
   }
-  addListenerCHANGE (func: Function) {
+  addListenerCHANGE(func: Function) {
      this.getModel().addListener(mxEvent.CHANGE, func);
    }
-   addListenerCELL_CONNECTED (func: Function) {
+   addListenerCELL_CONNECTED(func: Function) {
      this.getModel().addListener(mxEvent.CELL_CONNECTED, func);
   }
-   ramoveListenerCHANGE () {
+   ramoveListenerCHANGE() {
      mxEvent.removeAllListeners(mxEvent.CHANGE);
    }
    selectedModel(func: Function) {
     this.getSelectionModel().addListener(mxEvent.CHANGE, func);
+   }
+  toJSON(): ChessGraphData {
+    const grouping = [];
+    const cells = Object.values<GraphItemVertex | GraphItemEdge>(this.model.cells);
+    for (let i = 0; i < cells.length; i++) {
+          const tmp = this.model.getParent(cells[i]);
+          if (cells[i].vertex && (this.isPool(tmp) || this.isPool(cells[i]))) {
+            grouping.push(cells[i]);
+          }
+        }
+    return {
+       grouping,
+       graph: cells.filter((item) => item instanceof GraphItemVertex).map((item: GraphItemVertex) => item.toJSON()),
+     };
    }
   styling() {
     // Changes the default vertex style in-place

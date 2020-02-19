@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "index": "file:src/@types/mxgraph/index.d.ts"
+  }
+}

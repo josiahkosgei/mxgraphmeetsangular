@@ -12,13 +12,18 @@ module.exports = {
         "SharedArrayBuffer": "readonly"
     },
     "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
+    parserOptions: {
+    ecmaVersion: 6,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true
+    }
+  },
     "plugins": [
         "@typescript-eslint"
     ],
     "rules": {
+    '@typescipt-eslint/interface-name-prefix': ['always'],
+    'no-underscore-dangle': 'error'
     }
 };
