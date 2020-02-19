@@ -53,6 +53,11 @@ interface GraphItemVertexData {
   style: string;
   graphItemType: GraphItemTypes;
 }
+export class FieldmxPoint extends mxPoint {
+  constructor(width, height) {
+    super(width, height);
+  }
+}
 export class GraphItemEdge extends mxCell {
   private _target: GraphItemVertex;
   private _source: GraphItemVertex;
@@ -167,17 +172,17 @@ export class FieldMxgraph extends mxGraph {
     super(node);
     mxEvent.disableContextMenu(node);
 
-    // this.setConnectable(true);
+    this.setConnectable(true);
     this.timerAutoScroll = true;
     this.setPanning(true);
     this.centerZoom = true;
     this.setDropEnabled(true);
     // this.swimlaneNesting = false;
     this.connectionHandler.connectImage = new mxImage('../assets/icons/gif/connector.gif', 16, 16);
-    this.styling();
+    // this.styling();
     // this.minFitScale = null;
   }
-  insertEdge(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
+  insertEdgess(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
     this.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
   }
   createEdge(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
@@ -208,68 +213,6 @@ export class FieldMxgraph extends mxGraph {
       grouping,
       graph: cells.filter((item) => item instanceof GraphItemVertex).map((item: GraphItemVertex) => item.toJSON()),
     };
-  }
-  styling() {
-    this.getView().translate = new mxPoint(this.border / 2, this.border / 2);
-    // this.setResizeContainer(true);
-    // this.graphHandler.setRemoveCellsFromParent(false);
-    // Changes the default vertex style in-place
-    let style = this.getStylesheet().getDefaultVertexStyle();
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
-    style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'white';
-    style[mxConstants.STYLE_FONTSIZE] = 11;
-    style[mxConstants.STYLE_STARTSIZE] = 22;
-    style[mxConstants.STYLE_HORIZONTAL] = true;
-    style[mxConstants.STYLE_FONTCOLOR] = 'black';
-    style[mxConstants.STYLE_STROKECOLOR] = 'black';
-    delete style[mxConstants.STYLE_FILLCOLOR];
-
-    style = mxUtils.clone(style);
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-    style[mxConstants.STYLE_FONTSIZE] = 10;
-    style[mxConstants.STYLE_ROUNDED] = true;
-    style[mxConstants.STYLE_HORIZONTAL] = true;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
-    delete style[mxConstants.STYLE_STARTSIZE];
-    style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'none';
-    this.getStylesheet().putCellStyle('process', style);
-
-    style = mxUtils.clone(style);
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-    delete style[mxConstants.STYLE_ROUNDED];
-    this.getStylesheet().putCellStyle('state', style);
-
-    style = mxUtils.clone(style);
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RHOMBUS;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RhombusPerimeter;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = 'top';
-    style[mxConstants.STYLE_SPACING_TOP] = 40;
-    style[mxConstants.STYLE_SPACING_RIGHT] = 64;
-    this.getStylesheet().putCellStyle('condition', style);
-
-    style = mxUtils.clone(style);
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_DOUBLE_ELLIPSE;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
-    style[mxConstants.STYLE_SPACING_TOP] = 28;
-    style[mxConstants.STYLE_FONTSIZE] = 14;
-    style[mxConstants.STYLE_FONTSTYLE] = 1;
-    delete style[mxConstants.STYLE_SPACING_RIGHT];
-    this.getStylesheet().putCellStyle('end', style);
-
-    style = this.getStylesheet().getDefaultEdgeStyle();
-    style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
-    style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_BLOCK;
-    style[mxConstants.STYLE_ROUNDED] = true;
-    style[mxConstants.STYLE_FONTCOLOR] = 'black';
-    style[mxConstants.STYLE_STROKECOLOR] = 'black';
-
-    style = mxUtils.clone(style);
-    style[mxConstants.STYLE_DASHED] = true;
-    style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_OPEN;
-    style[mxConstants.STYLE_STARTARROW] = mxConstants.ARROW_OVAL;
-    this.getStylesheet().putCellStyle('crossover', style);
   }
 }
 export class FieldMxEditor extends mxEditor {
@@ -303,17 +246,21 @@ export class FieldMxEditor extends mxEditor {
     const model = this.graph.getModel();
     // Auto-resizes the container
     this.graph.border = 80;
-    this.graph.getView().translate = new mxPoint(this.graph.border/2, this.graph.border/2);
+    this.graph.getView().translate = new mxPoint(this.graph.border / 2, this.graph.border / 2);
     this.graph.setResizeContainer(true);
     this.graph.graphHandler.setRemoveCellsFromParent(false);
+    this.styling();
+    // Installs double click on middle control point and
+    // changes style of edges between empty and this value
+    this.graph.alternateEdgeStyle = 'elbow=vertical';
     // Adds automatic layout and various switches if the
     // graph is enabled
     if (this.graph.isEnabled()) {
 
-      this.graph.isValidTarget = function (cell) {
-        const style = this.getModel().getStyle(cell);
+      this.graph.isValidTarget = (cell) => {
+        const style = this.graph.getModel().getStyle(cell);
 
-        return !this.getModel().isEdge(cell) && !this.isSwimlane(cell) &&
+        return !this.graph.getModel().isEdge(cell) && !this.graph.isSwimlane(cell) &&
           (style == null || !(style === 'state' || style.indexOf('state') === 0));
       };
       // Returns true for valid drop operations
@@ -345,7 +292,7 @@ export class FieldMxEditor extends mxEditor {
 
       // Changes swimlane orientation while collapsed
       const graph = this.graph;
-      this.graph.model.getStyle = function (cell) {
+      this.graph.model.getStyle = function(cell) {
         let style = mxGraphModel.prototype.getStyle.apply(this, arguments);
         if (graph.isCellCollapsed(cell)) {
           if (style != null) {
@@ -403,6 +350,65 @@ export class FieldMxEditor extends mxEditor {
       return null;
     };
 
+  }
+  styling() {
+    // Changes the default vertex style in-place
+    let style = this.graph.getStylesheet().getDefaultVertexStyle();
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
+    style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+    style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'white';
+    style[mxConstants.STYLE_FONTSIZE] = 11;
+    style[mxConstants.STYLE_STARTSIZE] = 22;
+    style[mxConstants.STYLE_HORIZONTAL] = true;
+    style[mxConstants.STYLE_FONTCOLOR] = 'black';
+    style[mxConstants.STYLE_STROKECOLOR] = 'black';
+    delete style[mxConstants.STYLE_FILLCOLOR];
+
+    style = mxUtils.clone(style);
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+    style[mxConstants.STYLE_FONTSIZE] = 10;
+    style[mxConstants.STYLE_ROUNDED] = true;
+    style[mxConstants.STYLE_HORIZONTAL] = true;
+    style[mxConstants.STYLE_VERTICAL_ALIGN] = 'middle';
+    delete style[mxConstants.STYLE_STARTSIZE];
+    style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'none';
+    this.graph.getStylesheet().putCellStyle('process', style);
+
+    style = mxUtils.clone(style);
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_ELLIPSE;
+    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
+    delete style[mxConstants.STYLE_ROUNDED];
+    this.graph.getStylesheet().putCellStyle('state', style);
+
+    style = mxUtils.clone(style);
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RHOMBUS;
+    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RhombusPerimeter;
+    style[mxConstants.STYLE_VERTICAL_ALIGN] = 'top';
+    style[mxConstants.STYLE_SPACING_TOP] = 40;
+    style[mxConstants.STYLE_SPACING_RIGHT] = 64;
+    this.graph.getStylesheet().putCellStyle('condition', style);
+
+    style = mxUtils.clone(style);
+    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_DOUBLE_ELLIPSE;
+    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
+    style[mxConstants.STYLE_SPACING_TOP] = 28;
+    style[mxConstants.STYLE_FONTSIZE] = 14;
+    style[mxConstants.STYLE_FONTSTYLE] = 1;
+    delete style[mxConstants.STYLE_SPACING_RIGHT];
+    this.graph.getStylesheet().putCellStyle('end', style);
+
+    style = this.graph.getStylesheet().getDefaultEdgeStyle();
+    style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+    style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_BLOCK;
+    style[mxConstants.STYLE_ROUNDED] = true;
+    style[mxConstants.STYLE_FONTCOLOR] = 'black';
+    style[mxConstants.STYLE_STROKECOLOR] = 'black';
+
+    style = mxUtils.clone(style);
+    style[mxConstants.STYLE_DASHED] = true;
+    style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_OPEN;
+    style[mxConstants.STYLE_STARTARROW] = mxConstants.ARROW_OVAL;
+    this.graph.getStylesheet().putCellStyle('crossover', style);
   }
 }
 
