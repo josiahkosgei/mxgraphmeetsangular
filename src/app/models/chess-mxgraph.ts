@@ -7,8 +7,14 @@ const localMxgraph = require('mxgraph')();
 const { mxGraph, mxEvent, mxCell, mxGeometry, mxEditor, mxImage,
   mxStackLayout, mxLayoutManager, mxGraphModel, mxSwimlaneManager,
   mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager,
-  mxEdgeStyle, mxPoint, mxCellRenderer } = localMxgraph;
-
+  mxEdgeStyle, mxPoint, mxCellRenderer, mxResources, mxDragSource } = localMxgraph;
+export class FieldmxResources {
+  constructor() {
+  }
+  static changes() {
+    return mxResources.get('changesLost');
+  }
+}
 class JsonCodec extends mxObjectCodec {
   constructor() {
     super(null, null, null, null);
@@ -110,7 +116,7 @@ export abstract class GraphItemVertex extends mxCell {
   connectable: boolean;
   constructor({ id, value, x = 0, y = 0, style, graphItemType: graphItemType }:
     { id?: string, value: string, x: number, y: number, style: string, graphItemType: GraphItemTypes }) {
-    super(null, new mxGeometry(0, 0, 100, 100), '');
+    super();
     this.setVertex(true);
     if (id) {
       this.setId(id);
@@ -141,8 +147,8 @@ export abstract class GraphItemVertex extends mxCell {
   abstract get type(): GraphItemTypes;
   x: number;
   y: number;
-  readonly width: number = 60;
-  readonly height: number = 60;
+  readonly width: number = 32;
+  readonly height: number = 32;
   name: string;
   static getItem({ id, value, x = 0, y = 0, style, graphItemType }: GraphItemVertexData): GraphItemVertex {
     // tslint:disable-next-line: no-use-before-declare
@@ -236,13 +242,17 @@ export class FieldMxEditor extends mxEditor {
     editor.setGraphContainer(node);
     this.graph = editor.graph;
     this.model = this.graph.getModel();
-    this.onInit();
+    this.graph.setConnectable(true);
+    this.graph.setAllowDanglingEdges(false);
+    this.graph.allowAutoPanning = true;
+    this.graph.timerAutoScroll = true;
+    this.graph.dropEnabled = true;
     this.graph.connectionHandler.connectImage = new mxImage('../assets/icons/gif/connector.gif', 16, 16);
-
+    this.onInit();
   }
   onInit() {
 
-    this.graph.createPanningManager = () => {
+    this.graph.createPanningManager = function () {
       const pm = new mxPanningManager(this);
       pm.border = 30;
 
@@ -254,22 +264,18 @@ export class FieldMxEditor extends mxEditor {
     this.graph.setResizeContainer(true);
 
     this.styling();
-    // Installs double click on middle control point and
-    // changes style of edges between empty and this value
     this.graph.alternateEdgeStyle = 'elbow=vertical';
-    // Adds automatic layout and various switches if the
-    // graph is enabled
+
     if (this.graph.isEnabled()) {
-      // Allows new connections but no dangling edges
+      const that = this;
       this.graph.setConnectable(true);
       this.graph.setAllowDanglingEdges(false);
-      // End-states are no valid sources
       const previousIsValidSource = this.graph.isValidSource;
 
-      this.graph.isValidSource = (cell) => {
+      this.graph.isValidSource = function (cell) {
         if (cell) {
-          if (previousIsValidSource.apply(cell, arguments)) {
-            const style = this.graph.getModel().getStyle(cell);
+          if (previousIsValidSource.apply(this, arguments)) {
+            const style = that.graph.getModel().getStyle(cell);
             return style == null || !(style === 'end' || style.indexOf('end') === 0);
           }
           return false;
@@ -286,24 +292,27 @@ export class FieldMxEditor extends mxEditor {
       this.graph.setDropEnabled(true);
       this.graph.setSplitEnabled(false);
       // Returns true for valid drop operations
-      this.graph.isValidDropTarget = (target, cells, evt) => {
-        if (this.graph.isSplitEnabled() && this.graph.isSplitTarget(target, cells, evt)) {
+      this.graph.isValidDropTarget = function (target, cells, evt) {
+        if (this.isSplitEnabled() && this.isSplitTarget(target, cells, evt)) {
           return true;
         }
 
+        const model = this.getModel();
         let lane = false;
         let pool = false;
         let cell = false;
 
         // Checks if any lanes or pools are selected
         for (const [i, v] of cells.entries()) {
-          const tmp = this.graph.getModel().getParent(cells[i]);
-          lane = lane || this.graph.isPool(tmp);
-          pool = pool || this.graph.isPool(cells[i]);
+          const tmp = model.getParent(cells[i]);
+          lane = lane || this.isPool(tmp);
+          pool = pool || this.isPool(cells[i]);
+
           cell = cell || !(lane || pool);
         }
-        return !pool && cell !== lane && ((lane && this.graph.isPool(target)) ||
-          (cell && this.graph.isPool(this.graph.getModel().getParent(target))));
+
+        return !pool && cell != lane && ((lane && this.isPool(target)) ||
+          (cell && this.isPool(model.getParent(target))));
       };
 
       // Adds new method for identifying a pool
@@ -313,9 +322,10 @@ export class FieldMxEditor extends mxEditor {
       };
 
       // Changes swimlane orientation while collapsed
-      const that = this;
-      this.graph.model.getStyle = function(cell) {
+
+      this.graph.model.getStyle = function (cell) {
         let style = mxGraphModel.prototype.getStyle.apply(this, arguments);
+        // console.log('style=>', style);
         if (that.graph.isCellCollapsed(cell)) {
           if (style != null) {
             style += ';';
@@ -339,10 +349,6 @@ export class FieldMxEditor extends mxEditor {
         }
       };
       this.graph.addListener(mxEvent.FOLD_CELLS, foldingHandler);
-
-      this.graph.insertCustomEdge = (parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) => {
-        return this.graph.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
-      };
       this.graph.addListenerCHANGE = (func: Function) => {
         this.graph.getModel().addListener(mxEvent.CHANGE, func);
       };
@@ -387,7 +393,7 @@ export class FieldMxEditor extends mxEditor {
 
       return null;
     };
-    mxCellRenderer.prototype.rotateLabelBounds = function(state, bounds) {
+    mxCellRenderer.prototype.rotateLabelBounds = function (state, bounds) {
       bounds.y -= state.text.margin.y * bounds.height;
       bounds.x -= state.text.margin.x * bounds.width;
 
@@ -415,12 +421,22 @@ export class FieldMxEditor extends mxEditor {
         if (bounds.x != cx || bounds.y != cy) {
           const rad = theta * (Math.PI / 180);
           const pt = mxUtils.getRotatedPoint(new mxPoint(bounds.x, bounds.y),
-              Math.cos(rad), Math.sin(rad), new mxPoint(cx, cy));
+            Math.cos(rad), Math.sin(rad), new mxPoint(cx, cy));
 
           bounds.x = pt.x;
           bounds.y = pt.y;
         }
       }
+    };
+
+    mxDragSource.prototype.getDropTarget = function (graph, x, y) {
+      let cell = graph.getCellAt(x, y);
+      console.log('cell=>', cell);
+      if (!graph.isValidDropTarget(cell)) {
+        cell = null;
+      }
+
+      return cell;
     };
 
   }

@@ -1,6 +1,6 @@
-import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit, HostListener } from '@angular/core';
 import { ChessService } from '../../services/chess.service';
-import { FieldMxgraph, GraphItemVertex, FieldMxEditor, FieldmxPoint } from '../../models/chess-mxgraph';
+import { FieldMxgraph, GraphItemVertex, FieldMxEditor, FieldmxPoint, FieldmxResources } from '../../models/chess-mxgraph';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -12,6 +12,11 @@ export class MxgraphComponent implements OnInit {
   graph: any;
   editor: FieldMxEditor;
   lane2b: any;
+
+  @HostListener('window:beforeunload', [ '$event' ])
+  beforeUnloadHander(event) {
+    return FieldmxResources.changes();
+  }
   constructor(private elementRef: ElementRef,
               private chessService: ChessService) { }
   ngOnInit() {
@@ -29,7 +34,7 @@ export class MxgraphComponent implements OnInit {
         svgIconPath = dragItem.svgIconPath;
       }
       const item: GraphItemVertex = GraphItemVertex.getItem({
-        x, y, value: ``, style: `shape=image;image=${
+        x, y, value: dragItem.title, style: `shape=image;image=${
           svgIconPath};verticalAlign=top;verticalLabelPosition=bottom;portConstraint=eastwestsouthnorth`,
         graphItemType: dragItem.graphItemType
       });
@@ -46,7 +51,8 @@ export class MxgraphComponent implements OnInit {
       try {
         const parent = this.editor.graph.getDefaultParent();
         // this.editor.graph.addCell(item, parent);
-        this.editor.graph.insertVertex(parent, 0, item.value, item.x, item.y, item.width, item.height, item.style);
+        this.editor.graph.insertVertex(parent, null, item.value, item.x, item.y, item.width, item.height, item.style);
+        // this.editor.graph.insertVertex(lane2a, null, 'C', 560, 84, 30, 30, 'end');
       } finally {
         this.editor.graph.getModel().endUpdate();
       }
@@ -67,7 +73,6 @@ export class MxgraphComponent implements OnInit {
   private initGrph(node: HTMLElement) {
     this.editor = new FieldMxEditor(node);
     const parent = this.editor.graph.getDefaultParent();
-
     this.editor.graph.getModel().beginUpdate();
     try {
       const pool1 = this.editor.graph.insertVertex(parent, null, 'Pool 1', 0, 0, 1040, 0);
@@ -124,28 +129,28 @@ export class MxgraphComponent implements OnInit {
 
       this.editor.graph.insertEdge(lane2a, null, 'Yes', step444, end2, 'verticalAlign=bottom');
       e = this.editor.graph.insertEdge(lane2a, null, 'No', step444, end3, 'verticalAlign=top');
-      // e.geometry.points = [new FieldmxPoint(step444.geometry.x + step444.geometry.width / 2,
-      //   end3.geometry.y + end3.geometry.height / 2)];
+      e.geometry.points = [new FieldmxPoint(step444.geometry.x + step444.geometry.width / 2,
+        end3.geometry.y + end3.geometry.height / 2)];
 
       this.editor.graph.insertEdge(parent, null, null, step1, step2, 'crossover');
       this.editor.graph.insertEdge(parent, null, null, step3, step11, 'crossover');
       e = this.editor.graph.insertEdge(lane1a, null, null, step11, step33, 'crossover');
-      // e.geometry.points = [new FieldmxPoint(step33.geometry.x + step33.geometry.width / 2 + 20,
-      //   step11.geometry.y + step11.geometry.height * 4 / 5)];
+      e.geometry.points = [new FieldmxPoint(step33.geometry.x + step33.geometry.width / 2 + 20,
+        step11.geometry.y + step11.geometry.height * 4 / 5)];
       this.editor.graph.insertEdge(parent, null, null, step33, step4, null);
       this.editor.graph.insertEdge(lane1a, null, null, step111, end1, null);
     } finally {
       this.editor.graph.getModel().endUpdate();
     }
 
-    // this.editor.graph.addListenerCHANGE(() => {
-    //   // this.modelChange.emit(this.editor.graph.toJSON());
-    // });
-    // this.editor.graph.selectedModel((selected) => {
-    //     const tmp = this.editor.graph.model.getParent(selected.cells[0]);
-    //     const isLane = this.editor.graph.isPool(tmp);
-    //     const isPool = this.editor.graph.isPool(selected.cells[0]);
-    //   });
+    this.editor.graph.addListenerCHANGE(() => {
+      // this.modelChange.emit(this.editor.graph.toJSON());
+    });
+    this.editor.graph.selectedModel((selected) => {
+        const tmp = this.editor.graph.model.getParent(selected.cells[0]);
+        const isLane = this.editor.graph.isPool(tmp);
+        const isPool = this.editor.graph.isPool(selected.cells[0]);
+      });
   }
 
 }
