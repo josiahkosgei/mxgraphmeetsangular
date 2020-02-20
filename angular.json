@@ -34,7 +34,7 @@
               "src/assets/mxgraph/css/common.css"
             ],
             "scripts": [
-              "node_modules/mxgraph/javascript/mxClient.js",
+              "src/lib/mxClient.js",
               "src/assets/js/mxgraph.conf.js"
             ]
           },
