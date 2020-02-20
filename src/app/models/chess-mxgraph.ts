@@ -222,7 +222,8 @@ export class FieldMxEditor extends mxEditor {
   maintainSwimlanes: boolean;
   swimlaneRequired: boolean;
   forcedInserting: boolean;
-  graph: FieldMxgraph;
+  graph: any;
+  model: any;
   constructor(node: HTMLElement) {
     const config = mxUtils.load(
       '../assets/mxgraph/config/keyhandler-commons.xml').
@@ -231,8 +232,12 @@ export class FieldMxEditor extends mxEditor {
     this.maintainSwimlanes = true;
     this.swimlaneRequired = true;
     this.forcedInserting = true;
-    this.graph = new FieldMxgraph(node);
+    const editor = this;
+    editor.setGraphContainer(node);
+    this.graph = editor.graph;
+    this.model = this.graph.getModel();
     this.onInit();
+    this.graph.connectionHandler.connectImage = new mxImage('../assets/icons/gif/connector.gif', 16, 16);
 
   }
   onInit() {
@@ -243,12 +248,11 @@ export class FieldMxEditor extends mxEditor {
 
       return pm;
     };
-    const model = this.graph.getModel();
     // Auto-resizes the container
     this.graph.border = 80;
     this.graph.getView().translate = new mxPoint(this.graph.border / 2, this.graph.border / 2);
     this.graph.setResizeContainer(true);
-    this.graph.graphHandler.setRemoveCellsFromParent(false);
+
     this.styling();
     // Installs double click on middle control point and
     // changes style of edges between empty and this value
@@ -256,6 +260,21 @@ export class FieldMxEditor extends mxEditor {
     // Adds automatic layout and various switches if the
     // graph is enabled
     if (this.graph.isEnabled()) {
+      // Allows new connections but no dangling edges
+      this.graph.setConnectable(true);
+      this.graph.setAllowDanglingEdges(false);
+      // End-states are no valid sources
+      const previousIsValidSource = this.graph.isValidSource;
+
+      this.graph.isValidSource = (cell) => {
+        if (cell) {
+          if (previousIsValidSource.apply(cell, arguments)) {
+            const style = this.graph.getModel().getStyle(cell);
+            return style == null || !(style === 'end' || style.indexOf('end') === 0);
+          }
+          return false;
+        }
+      };
 
       this.graph.isValidTarget = (cell) => {
         const style = this.graph.getModel().getStyle(cell);
@@ -263,6 +282,9 @@ export class FieldMxEditor extends mxEditor {
         return !this.graph.getModel().isEdge(cell) && !this.graph.isSwimlane(cell) &&
           (style == null || !(style === 'state' || style.indexOf('state') === 0));
       };
+      // cells on edges to split edges
+      this.graph.setDropEnabled(true);
+      this.graph.setSplitEnabled(false);
       // Returns true for valid drop operations
       this.graph.isValidDropTarget = (target, cells, evt) => {
         if (this.graph.isSplitEnabled() && this.graph.isSplitTarget(target, cells, evt)) {
@@ -291,10 +313,10 @@ export class FieldMxEditor extends mxEditor {
       };
 
       // Changes swimlane orientation while collapsed
-      const graph = this.graph;
-      this.graph.model.getStyle = function(cell) {
+      const that = this;
+      this.graph.model.getStyle = function(cell){
         let style = mxGraphModel.prototype.getStyle.apply(this, arguments);
-        if (graph.isCellCollapsed(cell)) {
+        if (that.graph.isCellCollapsed(cell)) {
           if (style != null) {
             style += ';';
           } else {
@@ -317,6 +339,22 @@ export class FieldMxEditor extends mxEditor {
         }
       };
       this.graph.addListener(mxEvent.FOLD_CELLS, foldingHandler);
+
+      this.graph.insertCustomEdge = (parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) => {
+        return this.graph.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
+      };
+      this.graph.addListenerCHANGE = (func: Function) => {
+        this.graph.getModel().addListener(mxEvent.CHANGE, func);
+      };
+      this.graph.addListenerCELL_CONNECTED = (func: Function) => {
+        this.graph.getModel().addListener(mxEvent.CELL_CONNECTED, func);
+      };
+      this.graph.removeListenerCHANGE = () => {
+        mxEvent.removeAllListeners(mxEvent.CHANGE);
+      };
+      this.graph.selectedModel = (func: Function) => {
+        this.graph.getSelectionModel().addListener(mxEvent.CHANGE, func);
+      };
     }
 
     // Applies size changes to siblings and parents
@@ -341,7 +379,7 @@ export class FieldMxEditor extends mxEditor {
 
     layoutMgr.getLayout = (cell) => {
       if (!this.graph.model.isEdge(cell) && this.graph.getModel().getChildCount(cell) > 0 &&
-        (model.getParent(cell) === model.getRoot() || this.graph.isPool(cell))) {
+        (this.model.getParent(cell) === this.model.getRoot() || this.graph.isPool(cell))) {
         layout.fill = this.graph.isPool(cell);
 
         return layout;
@@ -352,6 +390,8 @@ export class FieldMxEditor extends mxEditor {
 
   }
   styling() {
+
+
     // Changes the default vertex style in-place
     let style = this.graph.getStylesheet().getDefaultVertexStyle();
     style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_SWIMLANE;
@@ -359,7 +399,7 @@ export class FieldMxEditor extends mxEditor {
     style[mxConstants.STYLE_LABEL_BACKGROUNDCOLOR] = 'white';
     style[mxConstants.STYLE_FONTSIZE] = 11;
     style[mxConstants.STYLE_STARTSIZE] = 22;
-    style[mxConstants.STYLE_HORIZONTAL] = true;
+    style[mxConstants.STYLE_HORIZONTAL] = false;
     style[mxConstants.STYLE_FONTCOLOR] = 'black';
     style[mxConstants.STYLE_STROKECOLOR] = 'black';
     delete style[mxConstants.STYLE_FILLCOLOR];
@@ -409,6 +449,7 @@ export class FieldMxEditor extends mxEditor {
     style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_OPEN;
     style[mxConstants.STYLE_STARTARROW] = mxConstants.ARROW_OVAL;
     this.graph.getStylesheet().putCellStyle('crossover', style);
+
   }
 }
 
