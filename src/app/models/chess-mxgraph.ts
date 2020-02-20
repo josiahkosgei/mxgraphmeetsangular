@@ -7,7 +7,7 @@ const localMxgraph = require('mxgraph')();
 const { mxGraph, mxEvent, mxCell, mxGeometry, mxEditor, mxImage,
   mxStackLayout, mxLayoutManager, mxGraphModel, mxSwimlaneManager,
   mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager,
-  mxEdgeStyle, mxPoint } = localMxgraph;
+  mxEdgeStyle, mxPoint, mxCellRenderer } = localMxgraph;
 
 class JsonCodec extends mxObjectCodec {
   constructor() {
@@ -314,7 +314,7 @@ export class FieldMxEditor extends mxEditor {
 
       // Changes swimlane orientation while collapsed
       const that = this;
-      this.graph.model.getStyle = function(cell){
+      this.graph.model.getStyle = function(cell) {
         let style = mxGraphModel.prototype.getStyle.apply(this, arguments);
         if (that.graph.isCellCollapsed(cell)) {
           if (style != null) {
@@ -386,6 +386,41 @@ export class FieldMxEditor extends mxEditor {
       }
 
       return null;
+    };
+    mxCellRenderer.prototype.rotateLabelBounds = function(state, bounds) {
+      bounds.y -= state.text.margin.y * bounds.height;
+      bounds.x -= state.text.margin.x * bounds.width;
+
+      if (!this.legacySpacing || (state.style[mxConstants.STYLE_OVERFLOW] != 'fill' && state.style[mxConstants.STYLE_OVERFLOW] != 'width')) {
+        const s = state.view.scale;
+        const spacing = state.text.getSpacing();
+        bounds.x += spacing.x * s;
+        bounds.y += spacing.y * s;
+
+        const hpos = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
+        const vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
+        const lw = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_WIDTH, null);
+
+        bounds.width = Math.max(0, bounds.width - ((hpos == mxConstants.ALIGN_CENTER && lw == null) ? (state.text.spacingLeft * s + state.text.spacingRight * s) : 0));
+        bounds.height = Math.max(0, bounds.height - ((vpos == mxConstants.ALIGN_MIDDLE) ? (state.text.spacingTop * s + state.text.spacingBottom * s) : 0));
+      }
+
+      const theta = state.text.getTextRotation();
+
+      // Only needed if rotated around another center
+      if (theta != 0 && state != null && state.view.graph.model.isVertex(state.cell)) {
+        const cx = state.getCenterX();
+        const cy = state.getCenterY();
+
+        if (bounds.x != cx || bounds.y != cy) {
+          const rad = theta * (Math.PI / 180);
+          const pt = mxUtils.getRotatedPoint(new mxPoint(bounds.x, bounds.y),
+              Math.cos(rad), Math.sin(rad), new mxPoint(cx, cy));
+
+          bounds.x = pt.x;
+          bounds.y = pt.y;
+        }
+      }
     };
 
   }
