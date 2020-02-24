@@ -1,26 +1,32 @@
-import { Component, OnInit, ElementRef, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { ChessService } from '../../services/chess.service';
-import { FieldMxgraph, GraphItemVertex, FieldMxEditor, FieldmxPoint, FieldmxResources } from '../../models/chess-mxgraph';
+import { GraphItemVertex, FieldMxEditor, FieldmxPoint, mxToolbar, mxUtils, mxCell, mxGeometry } from '../../models/chess-mxgraph';
 import { environment } from '../../../environments/environment';
+import { ItemListComponent } from '../item-list/item-list.component';
 
 @Component({
   selector: 'app-mxgraph',
   templateUrl: './mxgraph.component.html',
   styleUrls: ['./mxgraph.component.scss']
 })
-export class MxgraphComponent implements OnInit {
+
+export class MxgraphComponent implements OnInit, AfterViewInit {
+
+  constructor(private elementRef: ElementRef,
+              private chessService: ChessService) { }
   graph: any;
   editor: FieldMxEditor;
   lane2b: any;
+  toolbar: any;
 
-  @HostListener('window:beforeunload', [ '$event' ])
-  beforeUnloadHander(event) {
-    return FieldmxResources.changes();
-  }
-  constructor(private elementRef: ElementRef,
-              private chessService: ChessService) { }
   ngOnInit() {
     this.initGrph(this.elementRef.nativeElement.querySelector('.mxg-wrap'));
+  }
+  ngAfterViewInit() {
+    this.toolbar = new mxToolbar(document.getElementById('graph-item-list-parent'));
+    this.toolbar.enabled = false;
+    this.addVertex('../assets/icons/svg/003-sword.svg', 32, 32,  `shape=image;image=../assets/icons/svg/003-sword.svg;verticalAlign=bottom;verticalLabelPosition=bottom;horizontal=1;portConstraint=eastwestsouthnorth`);
+
   }
   dropItem(e: MouseEvent) {
     if (this.chessService.dragItem && this.chessService.dragItem.graphItem) {
@@ -35,23 +41,25 @@ export class MxgraphComponent implements OnInit {
       }
       const item: GraphItemVertex = GraphItemVertex.getItem({
         x, y, value: dragItem.title, style: `shape=image;image=${
-          svgIconPath};verticalAlign=top;verticalLabelPosition=bottom;portConstraint=eastwestsouthnorth`,
+          svgIconPath};verticalAlign=bottom;verticalLabelPosition=bottom;horizontal=1;portConstraint=eastwestsouthnorth`,
         graphItemType: dragItem.graphItemType
       });
       if (item) {
-        this.insertVertex(item);
+        this.insertVertex(item, svgIconPath);
       }
     }
   }
-  private insertVertex(item: GraphItemVertex) {
+  private insertVertex(item: GraphItemVertex, icon) {
     if (this.editor.graph) {
-      const model = this.editor.graph.getModel();
       // model.beginUpdate();
       this.editor.graph.getModel().beginUpdate();
       try {
         const parent = this.editor.graph.getDefaultParent();
         // this.editor.graph.addCell(item, parent);
-        this.editor.graph.insertVertex(parent, null, item.value, item.x, item.y, item.width, item.height, item.style);
+        const newVertex = new mxCell(null, new mxGeometry(0, 0, item.width, item.height), item.style);
+        newVertex.setVertex(true);
+        this.addToolbarItem(this.graph,  this.toolbar, newVertex, icon);
+        // this.editor.graph.insertVertex(parent, null, item.value, item.x, item.y, item.width, item.height, item.style);
         // this.editor.graph.insertVertex(lane2a, null, 'C', 560, 84, 30, 30, 'end');
       } finally {
         this.editor.graph.getModel().endUpdate();
@@ -146,11 +154,49 @@ export class MxgraphComponent implements OnInit {
     this.editor.graph.addListenerCHANGE(() => {
       // this.modelChange.emit(this.editor.graph.toJSON());
     });
-    this.editor.graph.selectedModel((selected) => {
-        const tmp = this.editor.graph.model.getParent(selected.cells[0]);
-        const isLane = this.editor.graph.isPool(tmp);
-        const isPool = this.editor.graph.isPool(selected.cells[0]);
-      });
+    this.editor.graph.selectedModel(() => {
+    });
+  }
+  addVertex(icon, w, h, style) {
+    const vertex = new mxCell(null, new mxGeometry(0, 0, w, h), style);
+    vertex.setVertex(true);
+
+    this.addToolbarItem(this.editor.graph, this.toolbar, vertex, icon);
   }
 
+  addToolbarItem(graph, toolbar, prototype, image) {
+    const funct = (graph, evt, cell) => {
+      this.editor.graph.stopEditing(false);
+
+      const pt = this.editor.graph.getPointForEvent(evt);
+      const vertex = this.editor.graph.getModel().cloneCell(prototype);
+      vertex.geometry.x = pt.x;
+      vertex.geometry.y = pt.y;
+
+      this.editor.graph.setSelectionCells(this.editor.graph.importCells([vertex], 0, 0, cell));
+    };
+
+    // Creates the image which is used as the drag icon (preview)
+    const img = toolbar.addMode(null, image, funct);
+    const ds = mxUtils.makeDraggable(img, this.editor.graph, funct);
+    ds.highlightDropTargets = true;
+
+    ds.getDropTarget = function(graphParam, x, y) {
+      if (graphParam.isSwimlane(prototype)) {
+        return null;
+      } else {
+        const cell = graphParam.getCellAt(x, y);
+
+        if (graphParam.isSwimlane(cell)) {
+          return cell;
+        } else {
+          const parent = graphParam.getModel().getParent(cell);
+
+          if (graphParam.isSwimlane(parent)) {
+            return parent;
+          }
+        }
+      }
+    };
+  }
 }

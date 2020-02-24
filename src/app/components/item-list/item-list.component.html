@@ -1,4 +1,4 @@
-<div class='item-list' cdkDropList #graphItemList="cdkDropList">
+<div class='item-list' cdkDropList #graphItemList="cdkDropList" id="graph-item-list-parent">
     <div *ngFor="let graphItemGroup of graphItemGroups$ | async">
       <h5 class="group-header">
           <span>{{graphItemGroup.category}}</span>
@@ -10,7 +10,6 @@
           </div>
         </div>
       </div>
-      
+
     </div>
   </div>
-  

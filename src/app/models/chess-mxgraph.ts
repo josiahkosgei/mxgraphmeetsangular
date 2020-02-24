@@ -4,7 +4,7 @@ import MxGraphFactory, { mxgraph } from 'mxgraph';
 
 const localMxgraph = require('mxgraph')();
 
-const { mxGraph, mxEvent, mxCell, mxGeometry, mxEditor, mxImage,
+export const { mxGraph, mxEvent, mxCell, mxGeometry, mxEditor, mxImage, mxToolbar,
   mxStackLayout, mxLayoutManager, mxGraphModel, mxSwimlaneManager,
   mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager,
   mxEdgeStyle, mxPoint, mxCellRenderer, mxResources, mxDragSource } = localMxgraph;
@@ -15,38 +15,7 @@ export class FieldmxResources {
     return mxResources.get('changesLost');
   }
 }
-class JsonCodec extends mxObjectCodec {
-  constructor() {
-    super(null, null, null, null);
-  }
-  encode(value) {
-    const xmlDoc = mxUtils.createXmlDocument();
-    const newObject = xmlDoc.createElement('Object');
-    // tslint:disable-next-line: forin
-    for (const prop in value) {
-      newObject.setAttribute(prop, value[prop]);
-    }
-    return newObject;
-  }
-  decode(model) {
-    return Object.keys(model.cells).map(
-      (iCell) => {
-        const currentCell = model.getCell(iCell);
-        return (currentCell.value !== undefined) ? currentCell : null;
-      }
-    ).filter((item) => (item !== null));
-  }
-  animate(model) {
-    return Object.keys(model.cells).map(
-      (iCell) => {
-        const currentCell = model.getCell(iCell);
-        if (currentCell) {
-          return (currentCell.value !== undefined) ? currentCell : null;
-        }
-      }
-    ).filter((item) => (item !== null));
-  }
-}
+
 export interface ChessGraphData {
   graph: any[];
   grouping: any[];
@@ -169,58 +138,6 @@ class GenericGraphItem<T> extends GraphItemVertex {
     this.graphItemType = itemType;
   }
 }
-export class FieldMxgraph extends mxGraph {
-  border: number;
-  timerAutoScroll: boolean;
-  centerZoom: boolean;
-  swimlaneNesting: boolean;
-  constructor(node: HTMLElement) {
-    super(node);
-    mxEvent.disableContextMenu(node);
-
-    this.setConnectable(true);
-    this.timerAutoScroll = true;
-    this.setPanning(true);
-    this.centerZoom = true;
-    this.setDropEnabled(true);
-    // this.swimlaneNesting = false;
-    this.connectionHandler.connectImage = new mxImage('../assets/icons/gif/connector.gif', 16, 16);
-    // this.styling();
-    // this.minFitScale = null;
-  }
-  insertEdge(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
-    return this.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
-  }
-  createEdge(parent: any, id: string, value: string, source: GraphItemVertex, target: GraphItemVertex, style) {
-    this.addCell(new GraphItemEdge({ parent, id, value, style, target, source }));
-  }
-  addListenerCHANGE(func: Function) {
-    this.getModel().addListener(mxEvent.CHANGE, func);
-  }
-  addListenerCELL_CONNECTED(func: Function) {
-    this.getModel().addListener(mxEvent.CELL_CONNECTED, func);
-  }
-  removeListenerCHANGE() {
-    mxEvent.removeAllListeners(mxEvent.CHANGE);
-  }
-  selectedModel(func: Function) {
-    this.getSelectionModel().addListener(mxEvent.CHANGE, func);
-  }
-  toJSON(): ChessGraphData {
-    const grouping = [];
-    const cells = Object.values<GraphItemVertex | GraphItemEdge>(this.model.cells);
-    for (const [i, v] of cells.entries()) {
-      const tmp = this.model.getParent(cells[i]);
-      if (cells[i].vertex && (this.isPool(tmp) || this.isPool(cells[i]))) {
-        grouping.push(cells[i]);
-      }
-    }
-    return {
-      grouping,
-      graph: cells.filter((item) => item instanceof GraphItemVertex).map((item: GraphItemVertex) => item.toJSON()),
-    };
-  }
-}
 export class FieldMxEditor extends mxEditor {
   defaultGroup: string;
   defaultEdge: string;
@@ -303,12 +220,14 @@ export class FieldMxEditor extends mxEditor {
         let cell = false;
 
         // Checks if any lanes or pools are selected
-        for (const [i, v] of cells.entries()) {
-          const tmp = model.getParent(cells[i]);
-          lane = lane || this.isPool(tmp);
-          pool = pool || this.isPool(cells[i]);
+        if(cells) {
+          for (const [i, v] of cells.entries()) {
+            const tmp = model.getParent(cells[i]);
+            lane = lane || this.isPool(tmp);
+            pool = pool || this.isPool(cells[i]);
 
-          cell = cell || !(lane || pool);
+            cell = cell || !(lane || pool);
+          }
         }
 
         return !pool && cell != lane && ((lane && this.isPool(target)) ||
@@ -397,7 +316,8 @@ export class FieldMxEditor extends mxEditor {
       bounds.y -= state.text.margin.y * bounds.height;
       bounds.x -= state.text.margin.x * bounds.width;
 
-      if (!this.legacySpacing || (state.style[mxConstants.STYLE_OVERFLOW] != 'fill' && state.style[mxConstants.STYLE_OVERFLOW] != 'width')) {
+      if (!this.legacySpacing || (state.style[mxConstants.STYLE_OVERFLOW] != 'fill'
+      && state.style[mxConstants.STYLE_OVERFLOW] != 'width')) {
         const s = state.view.scale;
         const spacing = state.text.getSpacing();
         bounds.x += spacing.x * s;
@@ -407,14 +327,18 @@ export class FieldMxEditor extends mxEditor {
         const vpos = mxUtils.getValue(state.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
         const lw = mxUtils.getValue(state.style, mxConstants.STYLE_LABEL_WIDTH, null);
 
-        bounds.width = Math.max(0, bounds.width - ((hpos == mxConstants.ALIGN_CENTER && lw == null) ? (state.text.spacingLeft * s + state.text.spacingRight * s) : 0));
-        bounds.height = Math.max(0, bounds.height - ((vpos == mxConstants.ALIGN_MIDDLE) ? (state.text.spacingTop * s + state.text.spacingBottom * s) : 0));
+        // tslint:disable-next-line: max-line-length
+        bounds.width = Math.max(0, bounds.width - ((hpos === mxConstants.ALIGN_CENTER && lw == null) ?
+        (state.text.spacingLeft * s + state.text.spacingRight * s) : 0));
+
+        bounds.height = Math.max(0, bounds.height - ((vpos === mxConstants.ALIGN_MIDDLE) ?
+        (state.text.spacingTop * s + state.text.spacingBottom * s) : 0));
       }
 
       const theta = state.text.getTextRotation();
 
       // Only needed if rotated around another center
-      if (theta != 0 && state != null && state.view.graph.model.isVertex(state.cell)) {
+      if (theta !== 0 && state != null && state.view.graph.model.isVertex(state.cell)) {
         const cx = state.getCenterX();
         const cy = state.getCenterY();
 
@@ -427,18 +351,8 @@ export class FieldMxEditor extends mxEditor {
           bounds.y = pt.y;
         }
       }
+
     };
-
-    mxDragSource.prototype.getDropTarget = function (graph, x, y) {
-      let cell = graph.getCellAt(x, y);
-      console.log('cell=>', cell);
-      if (!graph.isValidDropTarget(cell)) {
-        cell = null;
-      }
-
-      return cell;
-    };
-
   }
   styling() {
 
