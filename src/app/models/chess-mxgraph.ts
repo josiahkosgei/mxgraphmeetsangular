@@ -169,7 +169,7 @@ export class FieldMxEditor extends mxEditor {
   }
   onInit() {
 
-    this.graph.createPanningManager = function () {
+    this.graph.createPanningManager = function() {
       const pm = new mxPanningManager(this);
       pm.border = 30;
 
@@ -189,7 +189,7 @@ export class FieldMxEditor extends mxEditor {
       this.graph.setAllowDanglingEdges(false);
       const previousIsValidSource = this.graph.isValidSource;
 
-      this.graph.isValidSource = function (cell) {
+      this.graph.isValidSource = function(cell) {
         if (cell) {
           if (previousIsValidSource.apply(this, arguments)) {
             const style = that.graph.getModel().getStyle(cell);
@@ -209,7 +209,7 @@ export class FieldMxEditor extends mxEditor {
       this.graph.setDropEnabled(true);
       this.graph.setSplitEnabled(false);
       // Returns true for valid drop operations
-      this.graph.isValidDropTarget = function (target, cells, evt) {
+      this.graph.isValidDropTarget = function(target, cells, evt) {
         if (this.isSplitEnabled() && this.isSplitTarget(target, cells, evt)) {
           return true;
         }
@@ -220,7 +220,7 @@ export class FieldMxEditor extends mxEditor {
         let cell = false;
 
         // Checks if any lanes or pools are selected
-        if(cells) {
+        if (cells) {
           for (const [i, v] of cells.entries()) {
             const tmp = model.getParent(cells[i]);
             lane = lane || this.isPool(tmp);
@@ -242,7 +242,7 @@ export class FieldMxEditor extends mxEditor {
 
       // Changes swimlane orientation while collapsed
 
-      this.graph.model.getStyle = function (cell) {
+      this.graph.model.getStyle = function(cell) {
         let style = mxGraphModel.prototype.getStyle.apply(this, arguments);
         // console.log('style=>', style);
         if (that.graph.isCellCollapsed(cell)) {
@@ -312,7 +312,7 @@ export class FieldMxEditor extends mxEditor {
 
       return null;
     };
-    mxCellRenderer.prototype.rotateLabelBounds = function (state, bounds) {
+    mxCellRenderer.prototype.rotateLabelBounds = function(state, bounds) {
       bounds.y -= state.text.margin.y * bounds.height;
       bounds.x -= state.text.margin.x * bounds.width;
 
@@ -352,6 +352,50 @@ export class FieldMxEditor extends mxEditor {
         }
       }
 
+    };
+
+    mxToolbar.prototype.addMode = function(title, icon, funct, pressedIcon, style, toggle) {
+
+      toggle = (toggle != null) ? toggle : true;
+      const img: any = document.createElement((icon != null) ? 'img' : 'button');
+
+      img.initialClassName = style || 'mxToolbarMode';
+      img.className = img.initialClassName;
+      img.setAttribute('src', icon);
+      img.altIcon = pressedIcon;
+
+      if (title != null) {
+        img.setAttribute('title', title);
+      }
+
+      if (this.enabled && toggle) {
+        mxEvent.addListener(img, 'click', mxUtils.bind(this, function(evt) {
+          this.selectMode(img, funct);
+          this.noReset = false;
+        }));
+
+        mxEvent.addListener(img, 'dblclick', mxUtils.bind(this, function(evt) {
+          this.selectMode(img, funct);
+          this.noReset = true;
+        }));
+
+        if (this.defaultMode == null) {
+          this.defaultMode = img;
+          this.defaultFunction = funct;
+          this.selectMode(img, funct);
+        }
+      }
+      const closedDiv: any = document.createElement('div');
+      closedDiv.setAttribute('class', 'drag-item');
+
+      const closeSpan = document.createElement('span');
+      closeSpan.textContent = title;
+
+      closedDiv.appendChild(img);
+      closedDiv.appendChild(closeSpan);
+      this.container.appendChild(closedDiv);
+
+      return img;
     };
   }
   styling() {

@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { GraphItem, graphItems } from '../../models/graph-item';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { GraphItemGroups } from '../../models/graph-item-groups';
+import { Observable } from 'rxjs';
 import * as fromGraphItemGroupStore from '../../store';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { CreateGraphItemGroup } from '../../store/graph.actions';
 @Component({
   selector: 'app-item-list',
@@ -17,7 +16,7 @@ export class ItemListComponent implements OnInit, AfterViewInit {
   constructor(
     private cd: ChangeDetectorRef,
     private readonly graphItemGroupStore: Store<fromGraphItemGroupStore.State>) {
-      this.graphItemGroups$ = graphItemGroupStore.pipe(select(fromGraphItemGroupStore.getGraphItemGroup));
+      // this.graphItemGroups$ = graphItemGroupStore.pipe(select(fromGraphItemGroupStore.getGraphItemGroup));
                }
 
   ngOnInit() {
@@ -28,15 +27,14 @@ export class ItemListComponent implements OnInit, AfterViewInit {
   }
   groupGraphItems() {
     const formatedFlowItems = Object.values(
-      this.graphItems.reduce((result, { graphItemType, icon, svgIconPath, category, title }) => {
+      this.graphItems.reduce((result, { graphItemType, icon, svgIconPath, category, title, builtIn }) => {
         if (!result[category]) {
           result[category] = {category, _formatedFlowItems: []};
         }
-        result[category]._formatedFlowItems.push({ graphItemType, icon, svgIconPath, category, title });
+        result[category]._formatedFlowItems.push({ graphItemType, icon, svgIconPath, category, title, builtIn });
         return result;
       }, [])
     );
-    // this.graphItemGroups$.next([...formatedFlowItems]);
     this.graphItemGroupStore.dispatch(new CreateGraphItemGroup(formatedFlowItems));
   }
 

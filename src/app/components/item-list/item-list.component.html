@@ -1,15 +1,3 @@
 <div class='item-list' cdkDropList #graphItemList="cdkDropList" id="graph-item-list-parent">
-    <div *ngFor="let graphItemGroup of graphItemGroups$ | async">
-      <h5 class="group-header">
-          <span>{{graphItemGroup.category}}</span>
-      </h5>
-      <div *ngIf="graphItemGroup._formatedFlowItems.length>0">
-        <div *ngFor="let item of graphItemGroup._formatedFlowItems" cdkDrag fxLayout="row" fxLayoutAlign="start stretch">
-          <div>
-            <app-chess-drag-item [graphItem]=item class="drag-item"></app-chess-drag-item>
-          </div>
-        </div>
-      </div>
 
-    </div>
   </div>

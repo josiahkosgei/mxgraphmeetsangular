@@ -16,5 +16,13 @@ export enum GraphItemTypes {
     chessboard1 = 'chessboard1',
     crown1 = 'crown1',
     queen1 = 'queen1',
-    strategy = 'strategy'
+    strategy = 'strategy',
+    swimlane = 'swimlane',
+    rectangle = 'rectangle',
+    rounded = 'rounded',
+    ellipse = 'ellipse',
+    rhombus = 'rhombus',
+    triangle = 'triangle',
+    cylinder = 'cylinder',
+    actor = 'actor'
 }

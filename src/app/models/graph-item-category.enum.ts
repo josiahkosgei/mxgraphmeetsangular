@@ -1,5 +1,5 @@
 export enum GraphItemCategory {
-    Events = 'Events',
+    Layout = 'Layout',
     Decisions = 'Decisions',
     Actions = 'Actions'
 }

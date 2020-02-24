@@ -11,17 +11,82 @@ export class GraphItem {
     public title: string;
     public svgIconPath: IconPaths;
     public category: GraphItemCategory;
+    public builtIn:boolean;
 
   }
 
 export const graphItems: GraphItem[] = [
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.sword,
-      title: 'Sword',
-      icon: 'sword',
-      svgIconPath: IconPaths.sword,
-      category: GraphItemCategory.Events
+      graphItemType: GraphItemTypes.swimlane,
+      title: 'Swimlane',
+      icon: 'swimlane',
+      svgIconPath: IconPaths.swimlane,
+      category: GraphItemCategory.Layout,
+      builtIn:true
+    },
+    {
+      id: uuid(),
+      graphItemType: GraphItemTypes.rectangle,
+      title: 'Rectangle',
+      icon: 'rectangle',
+      svgIconPath: IconPaths.rectangle,
+      category: GraphItemCategory.Layout,
+      builtIn:true
+    },
+    {
+      id: uuid(),
+      graphItemType: GraphItemTypes.rounded,
+      title: 'Rounded',
+      icon: 'rounded',
+      svgIconPath: IconPaths.rounded,
+      category: GraphItemCategory.Layout,
+      builtIn:true
+    },
+    {
+      id: uuid(),
+      graphItemType: GraphItemTypes.ellipse,
+      title: 'Ellipse',
+      icon: 'ellipse',
+      svgIconPath: IconPaths.ellipse,
+      category: GraphItemCategory.Layout,
+      builtIn:true
+    },
+    {
+      id: uuid(),
+      graphItemType: GraphItemTypes.rhombus,
+      title: 'Rhombus',
+      icon: 'rhombus',
+      svgIconPath: IconPaths.rhombus,
+      category: GraphItemCategory.Decisions,
+      builtIn:true
+    },
+    {
+      id: uuid(),
+      graphItemType: GraphItemTypes.triangle,
+      title: 'Triangle',
+      icon: 'triangle',
+      svgIconPath: IconPaths.triangle,
+      category: GraphItemCategory.Layout,
+      builtIn:true
+    },
+    {
+      id: uuid(),
+      graphItemType: GraphItemTypes.cylinder,
+      title: 'Cylinder',
+      icon: 'cylinder',
+      svgIconPath: IconPaths.cylinder,
+      category: GraphItemCategory.Layout,
+      builtIn:true
+    },
+    {
+      id: uuid(),
+      graphItemType: GraphItemTypes.actor,
+      title: 'Actor',
+      icon: 'actor',
+      svgIconPath: IconPaths.actor,
+      category: GraphItemCategory.Layout,
+      builtIn:true
     },
     {
       id: uuid(),
@@ -29,7 +94,17 @@ export const graphItems: GraphItem[] = [
       title: 'Chess',
       icon: 'chess',
       svgIconPath: IconPaths.chess,
-      category: GraphItemCategory.Decisions
+      category: GraphItemCategory.Decisions,
+      builtIn:false
+    },
+    {
+      id: uuid(),
+      graphItemType: GraphItemTypes.sword,
+      title: 'Sword',
+      icon: 'sword',
+      svgIconPath: IconPaths.sword,
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -37,7 +112,8 @@ export const graphItems: GraphItem[] = [
       title: 'Trophy',
       icon: 'trophy',
       svgIconPath: IconPaths.trophy,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -45,7 +121,8 @@ export const graphItems: GraphItem[] = [
       title: 'Strategy',
       icon: 'strategy',
       svgIconPath: IconPaths.strategy,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -53,7 +130,8 @@ export const graphItems: GraphItem[] = [
       title: 'Horse Riding',
       icon: 'horseriding',
       svgIconPath: IconPaths.horseriding,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -61,7 +139,8 @@ export const graphItems: GraphItem[] = [
       title: 'Timer 1',
       icon: 'timer1',
       svgIconPath: IconPaths.timer1,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -69,7 +148,8 @@ export const graphItems: GraphItem[] = [
       title: 'Rook',
       icon: 'rook',
       svgIconPath: IconPaths.rook,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -77,7 +157,8 @@ export const graphItems: GraphItem[] = [
       title: 'Queen',
       icon: 'queen',
       svgIconPath: IconPaths.queen,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -85,7 +166,8 @@ export const graphItems: GraphItem[] = [
       title: 'Horse',
       icon: 'horse',
       svgIconPath: IconPaths.horse,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -93,7 +175,8 @@ export const graphItems: GraphItem[] = [
       title: 'Bishop',
       icon: 'bishop',
       svgIconPath: IconPaths.bishop,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -101,7 +184,8 @@ export const graphItems: GraphItem[] = [
       title: 'Pawn',
       icon: 'pawn',
       svgIconPath: IconPaths.pawn,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -109,7 +193,8 @@ export const graphItems: GraphItem[] = [
       title: 'King',
       icon: 'king',
       svgIconPath: IconPaths.king,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -117,7 +202,8 @@ export const graphItems: GraphItem[] = [
       title: 'Timer',
       icon: 'timer',
       svgIconPath: IconPaths.timer,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -125,7 +211,8 @@ export const graphItems: GraphItem[] = [
       title: 'Chessboard',
       icon: 'chessboard',
       svgIconPath: IconPaths.chessboard,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -133,7 +220,8 @@ export const graphItems: GraphItem[] = [
       title: 'Chessboard 1',
       icon: 'chessboard1',
       svgIconPath: IconPaths.chessboard1,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -141,7 +229,8 @@ export const graphItems: GraphItem[] = [
       title: 'Crown 1',
       icon: 'crown1',
       svgIconPath: IconPaths.crown1,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     },
     {
       id: uuid(),
@@ -149,7 +238,8 @@ export const graphItems: GraphItem[] = [
       title: 'Queen',
       icon: 'queen',
       svgIconPath: IconPaths.queen,
-      category: GraphItemCategory.Actions
+      category: GraphItemCategory.Actions,
+      builtIn:false
     }
 
   ];
