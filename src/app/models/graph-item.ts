@@ -11,7 +11,7 @@ export class GraphItem {
     public title: string;
     public svgIconPath: IconPaths;
     public category: GraphItemCategory;
-    public builtIn:boolean;
+    public builtIn: boolean;
 
   }
 
@@ -23,7 +23,7 @@ export const graphItems: GraphItem[] = [
       icon: 'swimlane',
       svgIconPath: IconPaths.swimlane,
       category: GraphItemCategory.Layout,
-      builtIn:true
+      builtIn: true
     },
     {
       id: uuid(),
@@ -32,7 +32,7 @@ export const graphItems: GraphItem[] = [
       icon: 'rectangle',
       svgIconPath: IconPaths.rectangle,
       category: GraphItemCategory.Layout,
-      builtIn:true
+      builtIn: true
     },
     {
       id: uuid(),
@@ -41,7 +41,7 @@ export const graphItems: GraphItem[] = [
       icon: 'rounded',
       svgIconPath: IconPaths.rounded,
       category: GraphItemCategory.Layout,
-      builtIn:true
+      builtIn: true
     },
     {
       id: uuid(),
@@ -50,7 +50,7 @@ export const graphItems: GraphItem[] = [
       icon: 'ellipse',
       svgIconPath: IconPaths.ellipse,
       category: GraphItemCategory.Layout,
-      builtIn:true
+      builtIn: true
     },
     {
       id: uuid(),
@@ -59,7 +59,7 @@ export const graphItems: GraphItem[] = [
       icon: 'rhombus',
       svgIconPath: IconPaths.rhombus,
       category: GraphItemCategory.Decisions,
-      builtIn:true
+      builtIn: true
     },
     {
       id: uuid(),
@@ -68,7 +68,7 @@ export const graphItems: GraphItem[] = [
       icon: 'triangle',
       svgIconPath: IconPaths.triangle,
       category: GraphItemCategory.Layout,
-      builtIn:true
+      builtIn: true
     },
     {
       id: uuid(),
@@ -77,7 +77,7 @@ export const graphItems: GraphItem[] = [
       icon: 'cylinder',
       svgIconPath: IconPaths.cylinder,
       category: GraphItemCategory.Layout,
-      builtIn:true
+      builtIn: true
     },
     {
       id: uuid(),
@@ -86,160 +86,160 @@ export const graphItems: GraphItem[] = [
       icon: 'actor',
       svgIconPath: IconPaths.actor,
       category: GraphItemCategory.Layout,
-      builtIn:true
+      builtIn: true
     },
     {
       id: uuid(),
       graphItemType: GraphItemTypes.chess,
-      title: 'Chess',
-      icon: 'chess',
+      title: 'Receipt',
+      icon: 'receipt',
       svgIconPath: IconPaths.chess,
       category: GraphItemCategory.Decisions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
       graphItemType: GraphItemTypes.sword,
-      title: 'Sword',
-      icon: 'sword',
-      svgIconPath: IconPaths.sword,
+      title: 'Bank',
+      icon: 'bank',
+      svgIconPath: IconPaths.bank,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.trophy,
-      title: 'Trophy',
-      icon: 'trophy',
-      svgIconPath: IconPaths.trophy,
+      graphItemType: GraphItemTypes.bankbook,
+      title: 'Bank Book',
+      icon: 'bankbook',
+      svgIconPath: IconPaths.bankbook,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
       graphItemType: GraphItemTypes.strategy,
-      title: 'Strategy',
-      icon: 'strategy',
+      title: 'Credit Card',
+      icon: 'credit-card',
       svgIconPath: IconPaths.strategy,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.horseriding,
-      title: 'Horse Riding',
-      icon: 'horseriding',
-      svgIconPath: IconPaths.horseriding,
+      graphItemType: GraphItemTypes.onlinebanking,
+      title: 'Online Banking',
+      icon: 'onlinebanking',
+      svgIconPath: IconPaths.onlinebanking,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
       graphItemType: GraphItemTypes.timer1,
-      title: 'Timer 1',
-      icon: 'timer1',
+      title: 'ATM',
+      icon: 'atm',
       svgIconPath: IconPaths.timer1,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.rook,
-      title: 'Rook',
-      icon: 'rook',
-      svgIconPath: IconPaths.rook,
+      graphItemType: GraphItemTypes.money,
+      title: 'Money',
+      icon: 'money',
+      svgIconPath: IconPaths.money,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.queen,
-      title: 'Queen',
-      icon: 'queen',
-      svgIconPath: IconPaths.queen,
+      graphItemType: GraphItemTypes.smartphonepayment,
+      title: 'Smartphone Payment',
+      icon: 'smartphonepayment',
+      svgIconPath: IconPaths.smartphonepayment,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
       graphItemType: GraphItemTypes.horse,
-      title: 'Horse',
-      icon: 'horse',
+      title: 'Cloud Banking',
+      icon: 'cloudbanking',
       svgIconPath: IconPaths.horse,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.bishop,
-      title: 'Bishop',
-      icon: 'bishop',
-      svgIconPath: IconPaths.bishop,
+      graphItemType: GraphItemTypes.portfolio,
+      title: 'Portfolio',
+      icon: 'portfolio',
+      svgIconPath: IconPaths.portfolio,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.pawn,
-      title: 'Pawn',
-      icon: 'pawn',
-      svgIconPath: IconPaths.pawn,
+      graphItemType: GraphItemTypes.banking,
+      title: 'Banking',
+      icon: 'banking',
+      svgIconPath: IconPaths.banking,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.king,
-      title: 'King',
-      icon: 'king',
-      svgIconPath: IconPaths.king,
+      graphItemType: GraphItemTypes.smartphone,
+      title: 'Smartphone',
+      icon: 'smartphone',
+      svgIconPath: IconPaths.smartphone,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
       graphItemType: GraphItemTypes.timer,
-      title: 'Timer',
-      icon: 'timer',
+      title: 'Smartphone 1',
+      icon: 'smartphone1',
       svgIconPath: IconPaths.timer,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.chessboard,
-      title: 'Chessboard',
-      icon: 'chessboard',
-      svgIconPath: IconPaths.chessboard,
+      graphItemType: GraphItemTypes.bankaccount1,
+      title: 'Bank Account 1',
+      icon: 'bankaccount1',
+      svgIconPath: IconPaths.bankaccount1,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.chessboard1,
-      title: 'Chessboard 1',
-      icon: 'chessboard1',
-      svgIconPath: IconPaths.chessboard1,
+      graphItemType: GraphItemTypes.bankaccount,
+      title: 'Bank Account',
+      icon: 'bankaccount',
+      svgIconPath: IconPaths.bankaccount,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.crown1,
-      title: 'Crown 1',
-      icon: 'crown1',
-      svgIconPath: IconPaths.crown1,
+      graphItemType: GraphItemTypes.borrow,
+      title: 'Borrow',
+      icon: 'borrow',
+      svgIconPath: IconPaths.borrow,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.queen,
-      title: 'Queen',
-      icon: 'queen',
-      svgIconPath: IconPaths.queen,
+      graphItemType: GraphItemTypes.smartphonepayment,
+      title: 'Smartphone Payment',
+      icon: 'smartphonepayment',
+      svgIconPath: IconPaths.smartphonepayment,
       category: GraphItemCategory.Actions,
-      builtIn:false
+      builtIn: false
     }
 
   ];

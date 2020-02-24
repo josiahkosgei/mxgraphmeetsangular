@@ -37,7 +37,7 @@ export class MxgraphComponent implements OnInit, AfterViewInit, OnDestroy {
       if (graphItemGroup.length > 0) {
         graphItemGroup.forEach((item) => {
           item._formatedFlowItems.forEach((formatedFlowItem) => {
-            this.addVertex(formatedFlowItem.svgIconPath, 32, 32, formatedFlowItem.builtIn ? `shape=${formatedFlowItem.icon}` : `shape=image;image=${
+            this.addVertex(formatedFlowItem.svgIconPath, 48, 48, formatedFlowItem.builtIn ? `shape=${formatedFlowItem.icon};verticalAlign=bottom;verticalLabelPosition=bottom;horizontal=1;portConstraint=eastwestsouthnorth` : `shape=image;image=${
               formatedFlowItem.svgIconPath};verticalAlign=bottom;verticalLabelPosition=bottom;horizontal=1;portConstraint=eastwestsouthnorth`, formatedFlowItem.title);
           });
           this.toolbar.addLine();
@@ -102,20 +102,11 @@ export class MxgraphComponent implements OnInit, AfterViewInit, OnDestroy {
       const pool1 = this.editor.graph.insertVertex(parent, null, 'Pool 1', 0, 0, 1040, 0);
       pool1.setConnectable(false);
 
-      const lane1a = this.editor.graph.insertVertex(pool1, null, 'Lane A', 0, 0, 1040, 210);
+      const lane1a = this.editor.graph.insertVertex(pool1, null, 'Lane A', 0, 0, 1040, 270);
       lane1a.setConnectable(false);
 
-      const lane1b = this.editor.graph.insertVertex(pool1, null, 'Lane B', 0, 0, 1040, 210);
+      const lane1b = this.editor.graph.insertVertex(pool1, null, 'Lane B', 0, 0, 1040, 270);
       lane1b.setConnectable(false);
-
-      const pool2 = this.editor.graph.insertVertex(parent, null, 'Pool 2', 0, 0, 1040, 0);
-      pool2.setConnectable(false);
-
-      const lane2a = this.editor.graph.insertVertex(pool2, null, 'Lane A', 0, 0, 1040, 210);
-      lane2a.setConnectable(false);
-
-      this.lane2b = this.editor.graph.insertVertex(pool2, null, 'Lane B', 0, 0, 1040, 210);
-      this.lane2b.setConnectable(false);
     } finally {
       this.editor.graph.getModel().endUpdate();
     }
