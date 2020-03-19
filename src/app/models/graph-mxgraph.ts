@@ -1,13 +1,12 @@
 import { getItemByType } from './graph-item';
 import { GraphItemTypes } from './graph-item-types.enum';
-import MxGraphFactory, { mxgraph } from 'mxgraph';
 
-const localMxgraph = require('mxgraph')();
+const mx = require('mxgraph')();
 
 export const { mxGraph, mxEvent, mxCell, mxGeometry, mxEditor, mxImage, mxToolbar,
   mxStackLayout, mxLayoutManager, mxGraphModel, mxSwimlaneManager,
   mxObjectCodec, mxUtils, mxPerimeter, mxConstants, mxPanningManager,
-  mxEdgeStyle, mxPoint, mxCellRenderer, mxResources, mxDragSource } = localMxgraph;
+  mxEdgeStyle, mxPoint, mxCellRenderer, mxResources, mxDragSource } = mx;
 export class FieldmxResources {
   constructor() {
   }
@@ -16,7 +15,7 @@ export class FieldmxResources {
   }
 }
 
-export interface ChessGraphData {
+export interface GraphGraphData {
   graph: any[];
   grouping: any[];
 }

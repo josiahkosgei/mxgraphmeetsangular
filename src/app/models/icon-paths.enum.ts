@@ -2,7 +2,7 @@ export enum IconPaths {
   bankbook = '../assets/icons/svg/001-bankbook.svg',
   timer1 = '../assets/icons/svg/002-atm.svg',
   bank = '../assets/icons/svg/003-bank.svg',
-  chess = '../assets/icons/svg/004-receipt.svg',
+  graph = '../assets/icons/svg/004-receipt.svg',
   strategy = '../assets/icons/svg/005-credit-card.svg',
   money = '../assets/icons/svg/006-money.svg',
   smartphonepayment = '../assets/icons/svg/007-smartphone-payment.svg',

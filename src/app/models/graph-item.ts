@@ -90,10 +90,10 @@ export const graphItems: GraphItem[] = [
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.chess,
+      graphItemType: GraphItemTypes.graph,
       title: 'Receipt',
       icon: 'receipt',
-      svgIconPath: IconPaths.chess,
+      svgIconPath: IconPaths.graph,
       category: GraphItemCategory.Decisions,
       builtIn: false
     },

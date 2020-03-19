@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { ChessService } from '../../services/chess.service';
-import { GraphItemVertex, FieldMxEditor, mxToolbar, mxUtils, mxCell, mxGeometry } from '../../models/chess-mxgraph';
+import { GraphService } from '../../services/graph.service';
+import { GraphItemVertex, FieldMxEditor, mxToolbar, mxUtils, mxCell, mxGeometry } from '../../models/graph-mxgraph';
 import { environment } from '../../../environments/environment';
 import * as fromGraphItemGroupStore from '../../store';
 import { Store, select } from '@ngrx/store';
@@ -19,7 +19,7 @@ export class MxgraphComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private elementRef: ElementRef,
               graphItemGroupStore: Store<fromGraphItemGroupStore.State>,
-              private chessService: ChessService) {
+              private graphService: GraphService) {
                 this.graphItemGroups$ = graphItemGroupStore.pipe(select(fromGraphItemGroupStore.getGraphItemGroup));
                }
   graph: any;
@@ -49,9 +49,9 @@ export class MxgraphComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroyed$.next();
   }
   dropItem(e: MouseEvent) {
-    if (this.chessService.dragItem && this.chessService.dragItem.graphItem) {
+    if (this.graphService.dragItem && this.graphService.dragItem.graphItem) {
 
-      const dragItem = this.chessService.dragItem.graphItem;
+      const dragItem = this.graphService.dragItem.graphItem;
       const { offsetX: x, offsetY: y }: { offsetX: number; offsetY: number } = e;
       let svgIconPath = '';
       if (!environment.production) {

@@ -1,29 +1,29 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GraphItem } from '../../models/graph-item';
 import { GraphItemTypes } from '../../models/graph-item-types.enum';
-import { ChessDragItem, ChessService } from '../../services/chess.service';
+import { GraphDragItem, GraphService } from '../../services/graph.service';
 
 @Component({
-  selector: 'app-chess-drag-item',
-  templateUrl: './chess-drag-item.component.html',
-  styleUrls: ['./chess-drag-item.component.scss']
+  selector: 'app-graph-drag-item',
+  templateUrl: './graph-drag-item.component.html',
+  styleUrls: ['./graph-drag-item.component.scss']
 })
-export class ChessDragItemComponent implements OnInit {
+export class GraphDragItemComponent implements OnInit {
 
   @Input('graphItemType') graphItemType: GraphItemTypes;
   @Input('graphItem') graphItem: GraphItem;
 
   constructor(
-    private chessService: ChessService
+    private graphService: GraphService
   ) { }
 
   setDrugItem() {
-    this.chessService.dragItem = new ChessDragItem(this.graphItem);
+    this.graphService.dragItem = new GraphDragItem(this.graphItem);
   }
 
   clearDropItem() {
     setTimeout(() => {
-      this.chessService.dragItem = null;
+      this.graphService.dragItem = null;
     }, 20);
   }
 

@@ -7,7 +7,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ItemListComponent } from './components/item-list/item-list.component';
 import { MxgraphComponent } from './components/mxgraph/mxgraph.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ChessDragItemComponent } from './components/chess-drag-item/chess-drag-item.component';
+import { GraphDragItemComponent } from './components/graph-drag-item/graph-drag-item.component';
 import { MaterialModule } from './material/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
@@ -23,7 +23,7 @@ import { GraphEffects } from './store/graph.effects';
     HomeComponent,
     ItemListComponent,
     MxgraphComponent,
-    ChessDragItemComponent
+    GraphDragItemComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,6 @@
 export enum GraphItemTypes {
     sword = 'sword',
-    chess = 'receipt',
+    graph = 'receipt',
     bankbook = 'bankbook',
     strateg = 'strategyy',
     onlinebanking = 'onlinebanking',
