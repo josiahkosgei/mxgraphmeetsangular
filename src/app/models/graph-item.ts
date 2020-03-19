@@ -19,7 +19,7 @@ export const graphItems: GraphItem[] = [
     {
       id: uuid(),
       graphItemType: GraphItemTypes.swimlane,
-      title: 'Swimlane',
+      title: 'Predefined Process',
       icon: 'swimlane',
       svgIconPath: IconPaths.swimlane,
       category: GraphItemCategory.Layout,
@@ -28,7 +28,7 @@ export const graphItems: GraphItem[] = [
     {
       id: uuid(),
       graphItemType: GraphItemTypes.rectangle,
-      title: 'Rectangle',
+      title: 'Process',
       icon: 'rectangle',
       svgIconPath: IconPaths.rectangle,
       category: GraphItemCategory.Layout,
@@ -46,7 +46,7 @@ export const graphItems: GraphItem[] = [
     {
       id: uuid(),
       graphItemType: GraphItemTypes.ellipse,
-      title: 'Ellipse',
+      title: 'Start',
       icon: 'ellipse',
       svgIconPath: IconPaths.ellipse,
       category: GraphItemCategory.Layout,
@@ -55,7 +55,7 @@ export const graphItems: GraphItem[] = [
     {
       id: uuid(),
       graphItemType: GraphItemTypes.rhombus,
-      title: 'Rhombus',
+      title: 'Decision',
       icon: 'rhombus',
       svgIconPath: IconPaths.rhombus,
       category: GraphItemCategory.Decisions,
@@ -64,7 +64,7 @@ export const graphItems: GraphItem[] = [
     {
       id: uuid(),
       graphItemType: GraphItemTypes.triangle,
-      title: 'Triangle',
+      title: 'Data',
       icon: 'triangle',
       svgIconPath: IconPaths.triangle,
       category: GraphItemCategory.Layout,
@@ -73,7 +73,7 @@ export const graphItems: GraphItem[] = [
     {
       id: uuid(),
       graphItemType: GraphItemTypes.cylinder,
-      title: 'Cylinder',
+      title: 'Direct data',
       icon: 'cylinder',
       svgIconPath: IconPaths.cylinder,
       category: GraphItemCategory.Layout,
@@ -82,7 +82,7 @@ export const graphItems: GraphItem[] = [
     {
       id: uuid(),
       graphItemType: GraphItemTypes.actor,
-      title: 'Actor',
+      title: 'User',
       icon: 'actor',
       svgIconPath: IconPaths.actor,
       category: GraphItemCategory.Layout,
