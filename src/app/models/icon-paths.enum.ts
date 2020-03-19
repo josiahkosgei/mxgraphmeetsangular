@@ -20,12 +20,12 @@ export enum IconPaths {
   zoomIn = '../assets/icons/svg/AM_Flow_Icons_ZoomIn.svg',
   fit = '../assets/icons/svg/AM_Flow_Icons_Fit.svg',
   actual = '../assets/icons/svg/AM_Flow_Icons_Actual.svg',
-  swimlane = '../assets/icons/gif/swimlane.gif',
-  rectangle = '../assets/icons/gif/rectangle.gif',
-  rounded = '../assets/icons/gif/rounded.gif',
-  ellipse = '../assets/icons/gif/ellipse.gif',
+  swimlane = '../assets/icons/gif/swimlane.png',
+  rectangle = '../assets/icons/gif/rectangle.png',
+  rounded = '../assets/icons/gif/rounded.png',
+  ellipse = '../assets/icons/gif/ellipse.png',
   rhombus = '../assets/icons/gif/rhombus.gif',
-  triangle = '../assets/icons/gif/triangle.gif',
-  cylinder = '../assets/icons/gif/cylinder.gif',
-  actor = '../assets/icons/gif/actor.gif'
+  triangle = '../assets/icons/gif/triangle.png',
+  cylinder = '../assets/icons/gif/cylinder.png',
+  actor = '../assets/icons/gif/actor.png'
 }
