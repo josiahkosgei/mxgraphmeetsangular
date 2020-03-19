@@ -99,13 +99,13 @@ export class MxgraphComponent implements OnInit, AfterViewInit, OnDestroy {
     const parent = this.editor.graph.getDefaultParent();
     this.editor.graph.getModel().beginUpdate();
     try {
-      const pool1 = this.editor.graph.insertVertex(parent, null, 'Pool 1', 0, 0, 1040, 0);
+      const pool1 = this.editor.graph.insertVertex(parent, null, 'Process 1', 0, 0, 1040, 0);
       pool1.setConnectable(false);
 
-      const lane1a = this.editor.graph.insertVertex(pool1, null, 'Lane A', 0, 0, 1040, 270);
+      const lane1a = this.editor.graph.insertVertex(pool1, null, 'Sub-Process A', 0, 0, 1040, 270);
       lane1a.setConnectable(false);
 
-      const lane1b = this.editor.graph.insertVertex(pool1, null, 'Lane B', 0, 0, 1040, 270);
+      const lane1b = this.editor.graph.insertVertex(pool1, null, 'Sub-Process B', 0, 0, 1040, 270);
       lane1b.setConnectable(false);
     } finally {
       this.editor.graph.getModel().endUpdate();
