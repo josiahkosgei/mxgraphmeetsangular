@@ -17,7 +17,7 @@ export class GraphDragItemComponent implements OnInit {
     private graphService: GraphService
   ) { }
 
-  setDrugItem() {
+  setDragItem() {
     this.graphService.dragItem = new GraphDragItem(this.graphItem);
   }
 
