@@ -16,6 +16,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './store/graph.effects';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ItemWrapperComponent } from './components/item-wrapper/item-wrapper.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { GraphEffects } from './store/graph.effects';
     HomeComponent,
     ItemListComponent,
     MxgraphComponent,
-    GraphDragItemComponent
+    GraphDragItemComponent,
+    ItemWrapperComponent
   ],
   imports: [
     BrowserModule,
@@ -43,6 +46,7 @@ import { GraphEffects } from './store/graph.effects';
       logOnly: environment.production,
     }) : [],
     EffectsModule.forRoot([GraphEffects]),
+    FlexLayoutModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

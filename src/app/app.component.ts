@@ -34,6 +34,8 @@ export class AppComponent {
     this.matIconRegistry.addSvgIcon('zoomIn', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/svg/Icon_ZoomIn.svg'));
     this.matIconRegistry.addSvgIcon('fit', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/svg/Icon_Fit.svg'));
     this.matIconRegistry.addSvgIcon('actual', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/svg/Icon_Actual.svg'));
+    this.matIconRegistry.addSvgIcon('startProcess', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/svg/start-process.svg'));
+    this.matIconRegistry.addSvgIcon('stopProcess', this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/icons/svg/end-terminate.svg'));
   }
 
 }

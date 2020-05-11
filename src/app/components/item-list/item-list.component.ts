@@ -26,16 +26,16 @@ export class ItemListComponent implements OnInit, AfterViewInit {
     this.cd.detectChanges();
   }
   groupGraphItems() {
-    const formatedFlowItems = Object.values(
+    const formatedItems = Object.values(
       this.graphItems.reduce((result, { graphItemType, icon, svgIconPath, category, title, builtIn }) => {
         if (!result[category]) {
-          result[category] = {category, _formatedFlowItems: []};
+          result[category] = {category, _formatedItems: []};
         }
-        result[category]._formatedFlowItems.push({ graphItemType, icon, svgIconPath, category, title, builtIn });
+        result[category]._formatedItems.push({ graphItemType, icon, svgIconPath, category, title, builtIn });
         return result;
       }, [])
     );
-    this.graphItemGroupStore.dispatch(new CreateGraphItemGroup(formatedFlowItems));
+    this.graphItemGroupStore.dispatch(new CreateGraphItemGroup(formatedItems));
   }
 
 }

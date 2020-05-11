@@ -1,4 +1,6 @@
 .mxg-wrap {
+  width: 100%;
+  height: calc(100% - 36px);
   position:absolute;overflow:hidden;top:40px;left:40px;width:97%;height:97%;border: gray dotted 1px;cursor:default;
   }
   .mxg-wrap .flow {

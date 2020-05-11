@@ -1,0 +1,5 @@
+<div cdkDropList>
+  <div class='item-wrapper' cdkDrag (cdkDragStarted)="setDragItem()" (cdkDragEnded)="clearDropItem()">
+    <ng-content></ng-content>
+  </div>
+</div>

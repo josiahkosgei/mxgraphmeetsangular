@@ -1,22 +1,31 @@
-<div class="mxg-wrap" (mouseup)="dropItem($event)" cdkDropList #cdkDropListConatiner>
-    <div fxLayout="row" class="graph-container" fxLayoutAlign="end start">
-      <div>
-          <div class="" role="toolbar" aria-label="Editor Actions">
-              <div class="graph-button-row">
-                  <button mat-raised-button (click)="zoomIn()">
-                      <mat-icon svgIcon="zoomIn"></mat-icon>
-                    </button>
-                  <button mat-raised-button (click)="zoomOut()">
-                      <mat-icon svgIcon="zoomOut"></mat-icon>
-                  </button>
-                  <button mat-raised-button (click)="actual()">
-                      <mat-icon svgIcon="actual"></mat-icon>
-                    </button>
-                  <button mat-raised-button (click)="fit()">
-                      <mat-icon svgIcon="fit"></mat-icon>
-                  </button>
-                </div>
-            </div>
+<div class="mxg-wrap" cdkDropList #cdkDropListConatiner>
+  <div fxLayout="row" fxLayoutAlign="space-between start" class="graph-container">
+    <div>
+    <div class="graph-button-row">
+      <button mat-raised-button (click)="simulateGraphProcess()">Animate</button>
+      <button mat-raised-button (click)="save()" color="accent">Save</button>
+      <!-- <button type="button" class="btn medium border-blue" (click)="simulateGraphProcess()" i18n="@@projectRelationManagement">
+          Animate
+        </button> -->
+    </div>
+    </div>
+    <div>
+      <div class="" role="toolbar" aria-label="Editor Actions">
+        <div class="graph-button-row">
+          <button mat-raised-button (click)="zoomIn()">
+            <mat-icon svgIcon="zoomIn"></mat-icon>
+          </button>
+          <button mat-raised-button (click)="zoomOut()">
+            <mat-icon svgIcon="zoomOut"></mat-icon>
+          </button>
+          <button mat-raised-button (click)="actual()">
+            <mat-icon svgIcon="actual"></mat-icon>
+          </button>
+          <button mat-raised-button (click)="fit()">
+            <mat-icon svgIcon="fit"></mat-icon>
+          </button>
+        </div>
       </div>
     </div>
   </div>
+</div>

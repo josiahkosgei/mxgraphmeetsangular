@@ -24,8 +24,10 @@ export enum IconPaths {
   rectangle = '../assets/icons/gif/rectangle.png',
   rounded = '../assets/icons/gif/rounded.png',
   ellipse = '../assets/icons/gif/ellipse.png',
-  rhombus = '../assets/icons/gif/rhombus.png',
+  condition = '../assets/icons/gif/rhombus.png',
   triangle = '../assets/icons/gif/triangle.png',
   cylinder = '../assets/icons/gif/cylinder.png',
-  actor = '../assets/icons/gif/actor.png'
+  actor = '../assets/icons/gif/actor.png',
+  stopProcess = '../assets/icons/svg/end-terminate.svg',
+  startProcess = '../assets/icons/svg/start-process.svg',
 }

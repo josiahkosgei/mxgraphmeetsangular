@@ -45,6 +45,24 @@ export const graphItems: GraphItem[] = [
     },
     {
       id: uuid(),
+      graphItemType: GraphItemTypes.startProcess,
+      title: 'Stat Process',
+      icon: 'startProcess',
+      svgIconPath: IconPaths.startProcess,
+      category: GraphItemCategory.Layout,
+      builtIn: false
+    },
+    {
+      id: uuid(),
+      graphItemType: GraphItemTypes.stopProcess,
+      title: 'Stop Process',
+      icon: 'stopProcess',
+      svgIconPath: IconPaths.stopProcess,
+      category: GraphItemCategory.Layout,
+      builtIn: false
+    },
+    {
+      id: uuid(),
       graphItemType: GraphItemTypes.ellipse,
       title: 'Start',
       icon: 'ellipse',
@@ -54,10 +72,10 @@ export const graphItems: GraphItem[] = [
     },
     {
       id: uuid(),
-      graphItemType: GraphItemTypes.rhombus,
+      graphItemType: GraphItemTypes.condition,
       title: 'Decision',
       icon: 'rhombus',
-      svgIconPath: IconPaths.rhombus,
+      svgIconPath: IconPaths.condition,
       category: GraphItemCategory.Decisions,
       builtIn: true
     },
@@ -94,7 +112,7 @@ export const graphItems: GraphItem[] = [
       title: 'Receipt',
       icon: 'receipt',
       svgIconPath: IconPaths.graph,
-      category: GraphItemCategory.Decisions,
+      category: GraphItemCategory.Actions,
       builtIn: false
     },
     {

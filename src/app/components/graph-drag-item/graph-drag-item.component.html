@@ -1,6 +1,4 @@
-  <div cdkDropList>
-    <div class='item-wrapper' cdkDrag (cdkDragStarted)="setDragItem()" (cdkDragEnded)="clearDropItem()">
-        <mat-icon [svgIcon]="graphItem.icon"></mat-icon>
-        <span>&nbsp; {{ graphItem.title }}</span>
-    </div>
-  </div>
+   <app-item-wrapper [graphItem]="graphItem">
+     <mat-icon [svgIcon]="graphItem.icon"></mat-icon>
+     <span>&nbsp; {{ graphItem.title }}</span>
+   </app-item-wrapper>

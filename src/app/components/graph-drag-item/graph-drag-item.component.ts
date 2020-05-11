@@ -9,23 +9,9 @@ import { GraphDragItem, GraphService } from '../../services/graph.service';
   styleUrls: ['./graph-drag-item.component.scss']
 })
 export class GraphDragItemComponent implements OnInit {
-
-  @Input('graphItemType') graphItemType: GraphItemTypes;
-  @Input('graphItem') graphItem: GraphItem;
-
+  @Input() graphItem: GraphItem;
   constructor(
-    private graphService: GraphService
   ) { }
-
-  setDragItem() {
-    this.graphService.dragItem = new GraphDragItem(this.graphItem);
-  }
-
-  clearDropItem() {
-    setTimeout(() => {
-      this.graphService.dragItem = null;
-    }, 20);
-  }
 
   ngOnInit() {
   }
